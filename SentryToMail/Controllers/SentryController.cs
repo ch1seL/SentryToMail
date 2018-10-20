@@ -1,9 +1,11 @@
-﻿using System.Net.Mail;
+﻿using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SentryToMail.API.Domain;
 using SentryToMail.API.Model;
 
@@ -14,15 +16,13 @@ namespace SentryToMail.API.Controllers {
 		private readonly IHostingEnvironment _env;
 		private readonly ILogger<SentryController> _logger;
 		private readonly IMapper _mapper;
-		private readonly IMailClient _smtpClient;
-		private readonly IViewRender _viewRender;
+		private readonly IMailSender _mailSender;
 
-		public SentryController(ILogger<SentryController> logger, IHostingEnvironment env, IMailClient smtpClient, IMapper mapper, IViewRender viewRender) {
+		public SentryController(ILogger<SentryController> logger, IHostingEnvironment env, SmtpClient smtpClient, IMapper mapper, IMailSender mailSender) {
 			_logger = logger;
 			_env = env;
-			_smtpClient = smtpClient;
 			_mapper = mapper;
-			_viewRender = viewRender;
+			_mailSender = mailSender;
 		}
 
 		[HttpPost]
@@ -44,16 +44,7 @@ namespace SentryToMail.API.Controllers {
 				}
 			}
 
-			string body = _viewRender.Render(name: "Emails/Sentry", mail);
-
-			string from = $"errors-{mail.Environment}@appulate.com";
-			string to = _env.IsDevelopment() ? "asalamatov@appulate.com" : $"errors-{mail.Environment}@appulate.com";
-			string subject = $"[Error] {mail.Message}";
-			var mailMessage = new MailMessage(from, to, subject, body) {
-				IsBodyHtml = true
-			};
-
-			await _smtpClient.SendMailAsync(mailMessage);
+			await _mailSender.TryRenderSendOrAddToQueue(mail);
 			return Ok();
 		}
 	}

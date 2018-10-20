@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using SentryToMail.API.Configurations;
+using SentryToMail.API.Domain;
 using SentryToMail.API.Utils.Extension;
 
 namespace SentryToMail.API {
@@ -36,6 +37,10 @@ namespace SentryToMail.API {
 			services.AddViewRender()
 			        .AddAutoMapper()
 			        .AddSmtpClient();
+
+			services
+				.AddScoped<IMailQueueRepository, MailQueueRepository>()
+				.AddScoped<IMailSender, MailSender>();
 		}
 	}
 }

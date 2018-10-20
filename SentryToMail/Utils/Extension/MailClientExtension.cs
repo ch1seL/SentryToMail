@@ -2,16 +2,15 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SentryToMail.API.Configurations;
-using SentryToMail.API.Domain;
 
 namespace SentryToMail.API.Utils.Extension {
-	public static class MailClientExtension {
+	public static class SmtpClientExtension {
 		public static IServiceCollection AddSmtpClient(this IServiceCollection serviceCollection) {
 			return serviceCollection
-				.AddScoped<IMailClient>(provider => {
+				.AddScoped(provider => {
 					var configuration = provider.GetService<IConfiguration>();
-					var smtpClientConfiguration = configuration.GetSection(nameof(MailClient)).Get<SmtpClientConfiguration>();
-					return new MailClient(smtpClientConfiguration.Host, smtpClientConfiguration.Port);
+					var smtpClientConfiguration = configuration.GetSection(nameof(SmtpClient)).Get<SmtpClientConfiguration>();
+					return new SmtpClient(smtpClientConfiguration.Host, smtpClientConfiguration.Port);
 				});
 		}
 	}
