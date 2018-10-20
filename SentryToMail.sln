@@ -11,9 +11,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentryToMail.Domain", "Sent
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentryToMail.Models", "SentryToMail.Models\SentryToMail.Models.csproj", "{1C8783FD-87A9-404C-8155-4CFDF8DEC4C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SentryToMail.Utils", "SentryToMail.Utils\SentryToMail.Utils.csproj", "{6B804C14-D131-4965-B2A2-D2D7EE758E7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentryToMail.Utils", "SentryToMail.Utils\SentryToMail.Utils.csproj", "{6B804C14-D131-4965-B2A2-D2D7EE758E7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SentryToMail.Configurations", "SentryToMail.Configurations\SentryToMail.Configurations.csproj", "{CA2129F5-7C89-478E-9192-2E36204A0AFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentryToMail.Configurations", "SentryToMail.Configurations\SentryToMail.Configurations.csproj", "{CA2129F5-7C89-478E-9192-2E36204A0AFE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6823F574-4413-4D61-AB06-743FA18A14C1}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
