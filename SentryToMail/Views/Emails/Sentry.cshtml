@@ -1,0 +1,137 @@
+﻿@model SentryToMail.API.Model.MailModel
+
+<!DOCTYPE html>
+<html style="font-weight: 300">
+<head style="font-weight: 300">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1" style="font-weight: 300">
+
+
+	<style type="text/css" style="font-weight: 300">
+		@@import url(https://fonts.googleapis.com/css?family=Lato:400,700)
+		;
+	</style>
+
+
+</head>
+<body class="" style="-webkit-font-smoothing: antialiased; background-color: #fff; background-image: url(https://s1.sentry-cdn.com/_static/42de78132655056465cfc918c3adb85b/sentry/images/email/sentry-pattern.png); color: #2f2936; font-family: &quot;Lato&quot;, &quot;Helvetica Neue&quot;, helvetica, sans-serif; font-size: 16px; font-weight: 300; margin: 0; padding: 0; width: 100%;">
+<div class="preheader" style="display: none; font-size: 0; font-weight: 300; line-height: 0; max-height: 0; mso-hide: all; padding: 0;">
+
+
+	<div class="issue " style="font-weight: 300; line-height: 22px">
+
+		<div class="event-type default" style="font-weight: 300">
+			<h3 style="font-size: 18px; font-weight: 700; line-height: 22px; margin: 0">
+				<a href="" style="color: #4674ca; font-size: 16px; font-weight: 600; text-decoration: none">@Model.Message</a><br style="font-weight: 300">
+
+				<span class="event-subtitle" style="font-size: 13px; font-style: italic; font-weight: 300; overflow-wrap: break-word; word-wrap: break-word;">@Model.Culprit</span>
+
+			</h3>
+		</div>
+
+	</div>
+
+
+</div>
+<table class="main" style="-webkit-font-smoothing: antialiased; background-color: #fff; border: 1px solid #c7d0d4; border-collapse: separate; border-radius: 4px; border-spacing: 0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); color: #2f2936; font-family: &quot;Lato&quot;, &quot;Helvetica Neue&quot;, helvetica, sans-serif; font-size: 16px; font-weight: 300; margin: 15px auto; max-width: 700px; padding: 0; width: 100%;">
+	<tr style="font-weight: 300">
+		<td style="font-weight: 300; margin: 0; padding: 0; text-align: center">
+			<div class="header" style="border-bottom: 1px solid #dee7eb; font-size: 14px; font-weight: 300; padding: 23px 0;">
+				<div class="container" style="font-weight: 300; margin: 0 auto; max-width: 600px; padding: 0 20px; text-align: left">
+
+
+					<a href="@Model.Url" class="btn" style="background-color: #6C5FC7; border: 1px solid #413496; border-radius: 4px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08); color: #fff; display: inline-block; float: right; font-size: 16px; font-weight: 600; line-height: 18px; margin: -3px 0 0; padding: 8px 15px; text-decoration: none;">View on Sentry</a>
+
+
+					<h1 style="color: #000; font-size: 38px; font-weight: normal; letter-spacing: -1px; line-height: 42px; margin: 0; padding: 0;">
+						<a href="https://sentry.io" style="color: #4674ca; font-weight: 500; text-decoration: none"><img src="https://s1.sentry-cdn.com/_static/42de78132655056465cfc918c3adb85b/sentry/images/email/sentry_logo_full.png" width="125px" height="29px" alt="Sentry" style="font-weight: 300"></a>
+					</h1>
+
+
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr style="font-weight: 300">
+		<td style="font-weight: 300; margin: 0; padding: 0; text-align: center">
+
+			<div class="container" style="font-weight: 300; margin: 0 auto; max-width: 600px; padding: 0 20px; text-align: left">
+				<div class="inner" style="background-color: #fff; font-weight: 300; padding: 30px 0 20px;">
+
+
+					<h2 style="font-size: 22px; font-weight: 700; margin: 0 0 20px">Regression</h2>
+
+					<p style="font-size: 16px; font-weight: 300; line-height: 24px; margin: 0 0 15px;"><span class="avatar-container" style="display: inline-block; font-weight: 300; height: 20px; margin-right: 5px; position: relative; vertical-align: text-top; width: 20px;"><img class="avatar" src="https://s1.sentry-cdn.com/_static/42de78132655056465cfc918c3adb85b/sentry/images/sentry-email-avatar.png" width="20px" height="20px" style="border-radius: 3px; font-weight: 300"></span> <strong style="font-weight: bold">Sentry</strong> marked <a href="@Model.Url" style="color: #4674ca; font-weight: 500; text-decoration: none">an issue</a> as a regression</p>
+
+
+					<div class="group-header" style="border-top: 1px solid #E7EBEE; font-weight: 300; margin-top: 30px; padding-top: 30px">
+						<table class="group-stats" style="border-collapse: collapse; font-weight: 300; margin: 0; width: 100%;">
+							<thead style="font-weight: 300">
+							<tr style="font-weight: 300">
+								<th style="color: #968ba0; font-weight: 300; min-width: 60px; padding: 5px 0; text-align: left;">
+									<h6 style="color: #9CA3AD; font-size: 12px; font-weight: bold; margin: 0 0 5px; text-transform: uppercase">On this issue</h6>
+								</th>
+								<th class="align-right" style="color: #968ba0; font-weight: 300; min-width: 60px; padding: 5px 0; text-align: right;">
+									<h6 style="color: #9CA3AD; font-size: 12px; font-weight: bold; margin: 0 0 5px; text-transform: uppercase">Level</h6>
+								</th>
+							</tr>
+							</thead>
+							<tr style="font-weight: 300">
+								<td class="group-message" style="font-weight: 300; margin: 0; padding: 0; text-align: left; vertical-align: top; width: 400px;">
+
+
+									<div class="issue " style="font-weight: 300; line-height: 22px">
+
+										<div class="event-type default" style="font-weight: 300">
+											<h3 style="font-size: 18px; font-weight: 700; line-height: 22px; margin: 0">
+												<a href="@Model.Url" style="color: #4674ca; font-size: 16px; font-weight: 600; text-decoration: none">@Model.Message</a><br style="font-weight: 300">
+
+												<span class="event-subtitle" style="font-size: 13px; font-style: italic; font-weight: 300; overflow-wrap: break-word; word-wrap: break-word;">@Model.Culprit</span>
+
+											</h3>
+										</div>
+
+									</div>
+
+
+									<p class="meta" style="font-size: 14px; font-weight: 300; line-height: 24px; margin: 0 0 15px">
+										<small style="color: #968ba0; font-size: 13px; font-weight: 300">
+											<span class="count" style="font-weight: 300">Seen <strong style="font-weight: bold">2</strong> times.</span>
+											<span class="last-seen pretty-date" style="font-weight: 300"> Last seen: Oct. 19, 2018, 8:29 a.m. UTC</span>
+											in <a href="https://sentry.io/appulate-inc-ka/appulate-staging/" style="color: #3D4649; font-weight: 500; text-decoration: none"><strong style="font-weight: bold">appulate-inc-ka / appulate-staging</strong></a>
+										</small>
+									</p>
+								</td>
+								<td class="group-level" style="font-weight: 300; margin: 0; padding: 0; text-align: right; vertical-align: top; width: 100px;">
+									<p class="value" style="font-size: 20px; font-weight: bold; line-height: 24px; margin: 0 0 15px;"><span class="level level-info" style="background-color: #4674ca; border-radius: 3px; color: #fff; font-size: 16px; font-weight: 300; padding: 0 6px 2px; text-transform: capitalize;">info</span></p>
+								</td>
+							</tr>
+						</table>
+					</div>
+
+
+					<p class="via" style="background-color: #f7f8f9; border-radius: 3px; font-size: 14px; font-weight: 300; line-height: 24px; margin: 15px 0; padding: 15px; text-align: center">
+						You are receiving this email because you have opted to receive updates for all issues within projects that you are a member of.
+					</p>
+
+
+				</div>
+			</div>
+
+			<div class="container" style="font-weight: 300; margin: 0 auto; max-width: 600px; padding: 0 20px; text-align: left">
+				<div class="footer" style="border-top: 1px solid #E7EBEE; font-weight: 300; padding: 35px 0;">
+
+					<a href="https://sentry.io" style="color: #687276; float: right; font-weight: 500; text-decoration: none">Home</a>
+
+					<a href="https://sentry.io/settings/account/notifications/" style="color: #687276; font-weight: 500; text-decoration: none">Notification Settings</a>
+
+					· <a href="https://sentry.io/account/notifications/unsubscribe/issue/734905317/?_=6ZVP:1gDQ9Y:KKycuAhGcRlpLUto_Nlco3E6waM" style="color: #687276; font-weight: 500; text-decoration: none">Unsubscribe</a>
+
+
+				</div>
+			</div>
+		</td>
+	</tr>
+</table>
+</body>
+</html>
