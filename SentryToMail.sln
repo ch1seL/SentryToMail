@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28124.53
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentryToMail.API", "SentryToMail\SentryToMail.API.csproj", "{ABD0EAEC-8BA3-4BA2-81D8-D130DCFE24FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentryToMail.API", "SentryToMail.API\SentryToMail.API.csproj", "{ABD0EAEC-8BA3-4BA2-81D8-D130DCFE24FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{102D591F-195F-4B65-98D8-840D82230EE3}"
 EndProject
