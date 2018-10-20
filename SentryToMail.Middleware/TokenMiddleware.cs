@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace SentryToMail.API.Middleware {
+namespace SentryToMail.Middleware {
 	public class TokenMiddleware {
 		private readonly RequestDelegate _next;
 		private readonly string _token;

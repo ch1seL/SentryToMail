@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SentryToMail.Configurations\SentryToMail.Configurations.csproj" />
+    <ProjectReference Include="..\SentryToMail.Middleware\SentryToMail.Middleware.csproj" />
   </ItemGroup>
 
 </Project>

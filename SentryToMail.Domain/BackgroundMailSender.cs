@@ -5,24 +5,28 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using SentryToMail.Configurations.Options;
 using SentryToMail.Models;
 
 namespace SentryToMail.Domain {
 	public class BackgroundMailSender : BackgroundService {
 		private readonly IServiceProvider _serviceProvider;
 		private readonly ILogger<BackgroundMailSender> _logger;
+		private readonly BackgroundMailSenderOptions _options;
 
-		public BackgroundMailSender(IServiceProvider serviceProvider, ILogger<BackgroundMailSender> logger) {
+		public BackgroundMailSender(IServiceProvider serviceProvider, ILogger<BackgroundMailSender> logger, IOptions<BackgroundMailSenderOptions> optionsAccessor) {
 			_serviceProvider = serviceProvider;
 			_logger = logger;
+			_options = optionsAccessor.Value;
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
-			stoppingToken.Register(() => _logger.LogDebug(" BackgroundMailSender task is stopping."));
+			stoppingToken.Register(() => _logger.LogDebug("Background task is stopping."));
 
 			while (!stoppingToken.IsCancellationRequested) {
-				_logger.LogDebug("BackgroundMailSender task doing background work.");
-
+				bool useDelay = true;
+				_logger.LogDebug("Background task doing background work.");
 				using (IServiceScope scope = _serviceProvider.CreateScope()) {
 					IServiceProvider serviceProvider = scope.ServiceProvider;
 					var mailQueueRepository = serviceProvider.GetRequiredService<IMailQueueRepository>();
@@ -31,18 +35,20 @@ namespace SentryToMail.Domain {
 						_logger.LogInformation($"Found {mailQueue.Count} mails in repository");
 						var mailSender = serviceProvider.GetRequiredService<IMailSender>();
 						foreach (MailModel mail in mailQueue) {
-							if (await mailSender.RenderAndTrySendMail(mail)) {
-								mailQueueRepository.Delete(mail);
-							} else {
-								await Task.Delay((int)TimeSpan.FromMinutes(1).TotalMilliseconds, stoppingToken);
+							if (!await mailSender.RenderAndTrySendMail(mail)) {
+								continue;
 							}
+							mailQueueRepository.Delete(mail);
+							useDelay = false;
 						}
 					}
 				}
-				await Task.Delay((int)TimeSpan.FromMinutes(1).TotalMilliseconds, stoppingToken);
+				if (useDelay) {
+					await Task.Delay((int)_options.Interval.TotalMilliseconds, stoppingToken);
+				}
 			}
 
-			_logger.LogDebug("GracePeriod background task is stopping.");
+			_logger.LogDebug("Background task is stopping.");
 		}
 	}
 }

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using SentryToMail.API.Middleware;
 using SentryToMail.Configurations.Options;
 using SentryToMail.Domain;
 using SentryToMail.Utils.Extension;
@@ -23,9 +22,8 @@ namespace SentryToMail.API {
 				app.UseDeveloperExceptionPage();
 			}
 
-			app.UseToken<TokenMiddleware>();
-
-			app.UseMvc();
+			app.UseToken()
+			   .UseMvc();
 		}
 
 		public void ConfigureServices(IServiceCollection services) {
@@ -36,13 +34,13 @@ namespace SentryToMail.API {
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 			services
-				.AddAutoMapper()
-				.AddSmtpClient();
+				.AddAutoMapper();
 
 			services
 				.AddSingleton<IMailQueueRepository, MailQueueRepository>()
-				.AddScoped<IViewRender, ViewRender>()
-				.AddScoped<IMailSender, MailSender>();
+				.AddTransient<ISmtpClient, SmtpClientWrapper>()
+				.AddTransient<IViewRender, ViewRender>()
+				.AddTransient<IMailSender, MailSender>();
 
 			services
 				.AddHostedService<BackgroundMailSender>();
@@ -50,7 +48,9 @@ namespace SentryToMail.API {
 			services
 				.AddOptions()
 				.Configure<RepositoriesOptions>(Configuration.GetSection(nameof(RepositoriesOptions)))
-				.Configure<MailOptions>(Configuration.GetSection(nameof(MailOptions)));
+				.Configure<MailOptions>(Configuration.GetSection(nameof(MailOptions)))
+				.Configure<SmtpOptions>(Configuration.GetSection(nameof(SmtpOptions)))
+				.Configure<BackgroundMailSenderOptions>(Configuration.GetSection(nameof(BackgroundMailSenderOptions)));
 		}
 	}
 }

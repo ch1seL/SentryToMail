@@ -1,5 +1,4 @@
-﻿using System.Net.Mail;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -18,7 +17,7 @@ namespace SentryToMail.API.Controllers {
 		private readonly IMailSender _mailSender;
 		private readonly IMailQueueRepository _mailQueueRepository;
 
-		public SentryController(ILogger<SentryController> logger, IHostingEnvironment env, SmtpClient smtpClient, IMapper mapper, IMailSender mailSender, IMailQueueRepository mailQueueRepository) {
+		public SentryController(ILogger<SentryController> logger, IHostingEnvironment env, IMapper mapper, IMailSender mailSender, IMailQueueRepository mailQueueRepository) {
 			_logger = logger;
 			_env = env;
 			_mapper = mapper;
@@ -30,25 +29,33 @@ namespace SentryToMail.API.Controllers {
 		public async Task<IActionResult> PostAsync([FromBody] SentryDataModel dataModel) {
 			var mail = _mapper.Map<MailModel>(dataModel);
 
-			if (!_env.IsDevelopment()) {
-				if (string.IsNullOrWhiteSpace(mail.Environment) || mail.Environment == "local") {
-					_logger.LogInformation(message: "Local environment detected!");
-					return StatusCode(statusCode: 400);
-				}
-				if (mail.Environment == "Production" && !_env.IsProduction()) {
-					_logger.LogError(message: "Production environment detected!");
-					return StatusCode(statusCode: 400);
-				}
-				if (mail.Environment != "Production" && !_env.IsStaging()) {
-					_logger.LogError(message: "Not development environment detected!");
-					return StatusCode(statusCode: 400);
-				}
+			if (!TryCheckEnvironment(mail.Environment, out string error)) {
+				_logger.LogInformation(error);
+				return BadRequest(new { Error = error });
 			}
 
-			if (!await _mailSender.RenderAndTrySendMail(mail)) {
-				_mailQueueRepository.Add(mail);
+			if (await _mailSender.RenderAndTrySendMail(mail)) {
+				return Ok(new { Result = $"Mail {mail.Id} sended" });
 			}
-			return Ok();
+			_mailQueueRepository.Add(mail);
+			return Ok(new { Result = $"Mail {mail.Id} queued" });
+		}
+
+		private bool TryCheckEnvironment(string mailEnvironment, out string wrongEnvironmentError) {
+			wrongEnvironmentError = null;
+
+			if (_env.IsDevelopment()) {
+				return true;
+			}
+			if (string.IsNullOrWhiteSpace(mailEnvironment) || mailEnvironment == "local") {
+				wrongEnvironmentError = "Empty or Local environment detected!";
+			} else if (mailEnvironment == "Production" && !_env.IsProduction()) {
+				wrongEnvironmentError = "Production environment detected!";
+			} else if (mailEnvironment != "Production" && !_env.IsStaging()) {
+				wrongEnvironmentError = "Not development environment detected!";
+			}
+
+			return wrongEnvironmentError == null;
 		}
 	}
 }

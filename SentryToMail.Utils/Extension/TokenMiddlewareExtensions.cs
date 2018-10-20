@@ -2,13 +2,17 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SentryToMail.Configurations;
+using SentryToMail.Middleware;
 
 namespace SentryToMail.Utils.Extension {
 	public static class TokenMiddlewareExtensions {
-		public static IApplicationBuilder UseToken<T>(this IApplicationBuilder builder) {
-			var configuration = builder.ApplicationServices.GetRequiredService<IConfiguration>();
-			var securitySettings = configuration.GetSection(nameof(SecuritySettings)).Get<SecuritySettings>();
-			return string.IsNullOrWhiteSpace(securitySettings.Token) ? builder : builder.UseMiddleware<T>(securitySettings);
+		public static IApplicationBuilder UseToken(this IApplicationBuilder builder, string token = null) {
+			if (token == null) {
+				var configuration = builder.ApplicationServices.GetRequiredService<IConfiguration>();
+				var securitySettings = configuration.GetSection(nameof(SecuritySettings)).Get<SecuritySettings>();
+				token = securitySettings.Token;
+			}
+			return string.IsNullOrWhiteSpace(token) ? builder : builder.UseMiddleware<TokenMiddleware>(token);
 		}
 	}
 }

@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SentryToMail.Middleware", "SentryToMail.Middleware\SentryToMail.Middleware.csproj", "{7015D75B-1BE3-4BB9-8ECF-5C31FCD879B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{CA2129F5-7C89-478E-9192-2E36204A0AFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA2129F5-7C89-478E-9192-2E36204A0AFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA2129F5-7C89-478E-9192-2E36204A0AFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7015D75B-1BE3-4BB9-8ECF-5C31FCD879B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7015D75B-1BE3-4BB9-8ECF-5C31FCD879B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7015D75B-1BE3-4BB9-8ECF-5C31FCD879B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7015D75B-1BE3-4BB9-8ECF-5C31FCD879B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +62,7 @@ Global
 		{1C8783FD-87A9-404C-8155-4CFDF8DEC4C0} = {102D591F-195F-4B65-98D8-840D82230EE3}
 		{6B804C14-D131-4965-B2A2-D2D7EE758E7C} = {102D591F-195F-4B65-98D8-840D82230EE3}
 		{CA2129F5-7C89-478E-9192-2E36204A0AFE} = {102D591F-195F-4B65-98D8-840D82230EE3}
+		{7015D75B-1BE3-4BB9-8ECF-5C31FCD879B1} = {102D591F-195F-4B65-98D8-840D82230EE3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1418D477-64F0-4782-9030-C83027024903}

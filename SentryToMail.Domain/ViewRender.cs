@@ -23,8 +23,8 @@ namespace SentryToMail.Domain {
 		}
 
 		public string Render<TModel>(string name, TModel model) {
-			ActionContext actionContext = GetActionContext();
-
+			var actionContext = new ActionContext(new DefaultHttpContext { RequestServices = _serviceProvider }, new RouteData(), new ActionDescriptor());
+		
 			ViewEngineResult viewEngineResult = _viewEngine.FindView(actionContext, name, isMainPage: false);
 
 			if (!viewEngineResult.Success) {
@@ -48,12 +48,6 @@ namespace SentryToMail.Domain {
 
 				return output.ToString();
 			}
-		}
-
-		private ActionContext GetActionContext() {
-			var httpContext = new DefaultHttpContext();
-			httpContext.RequestServices = _serviceProvider;
-			return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
 		}
 	}
 }
