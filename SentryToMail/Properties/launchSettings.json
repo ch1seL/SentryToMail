@@ -9,21 +9,31 @@
 		}
 	},
 	"profiles": {
-		"IIS Express": {
-			"commandName": "IISExpress",
-			"launchBrowser": true,
-			"launchUrl": "api/values",
-			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Development"
-			}
-		},
-		"SentryToMail": {
+		"Development": {
 			"commandName": "Project",
 			"launchBrowser": false,
 			"launchUrl": "api/values",
 			"applicationUrl": "http://0.0.0.0:1081",
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		},
+		"Production": {
+			"commandName": "Project",
+			"launchBrowser": false,
+			"launchUrl": "api/values",
+			"applicationUrl": "http://0.0.0.0:1081",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Production"
+			}
+		},
+		"Staging": {
+			"commandName": "Project",
+			"launchBrowser": false,
+			"launchUrl": "api/values",
+			"applicationUrl": "http://0.0.0.0:1081",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Staging"
 			}
 		}
 	}

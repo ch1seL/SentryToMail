@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using SentryToMail.API.Configurations;
 using SentryToMail.API.Utils.Extension;
 
 namespace SentryToMail.API {
@@ -15,27 +16,26 @@ namespace SentryToMail.API {
 
 		public IConfiguration Configuration { get; }
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
 			if (env.IsDevelopment()) {
 				app.UseDeveloperExceptionPage();
 			}
 
+			var securitySettings = Configuration.GetSection(nameof(SecuritySettings)).Get<SecuritySettings>();
+			app.UseToken(securitySettings.Token);
+
 			app.UseMvc();
 		}
 
-		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services) {
 			services.AddMvcCore()
 			        .AddRazorViewEngine()
 			        .AddJsonFormatters(settings => settings.Formatting = Formatting.Indented)
 			        .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-			services.AddViewRender();
-
-			services.AddAutoMapper();
-
-			services.AddSmtpClient();
+			services.AddViewRender()
+			        .AddAutoMapper()
+			        .AddSmtpClient();
 		}
 	}
 }

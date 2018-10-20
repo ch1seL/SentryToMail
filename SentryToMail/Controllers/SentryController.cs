@@ -39,7 +39,7 @@ namespace SentryToMail.API.Controllers {
 					return StatusCode(statusCode: 400);
 				}
 				if (mail.Environment != "Production" && !_env.IsStaging()) {
-					_logger.LogError(message: "Not dev environment detected!");
+					_logger.LogError(message: "Not development environment detected!");
 					return StatusCode(statusCode: 400);
 				}
 			}
