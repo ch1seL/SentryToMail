@@ -1,11 +1,9 @@
-﻿using System.Net;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using SentryToMail.API.Domain;
 using SentryToMail.API.Model;
 
@@ -17,12 +15,14 @@ namespace SentryToMail.API.Controllers {
 		private readonly ILogger<SentryController> _logger;
 		private readonly IMapper _mapper;
 		private readonly IMailSender _mailSender;
+		private readonly IMailQueueRepository _mailQueueRepository;
 
-		public SentryController(ILogger<SentryController> logger, IHostingEnvironment env, SmtpClient smtpClient, IMapper mapper, IMailSender mailSender) {
+		public SentryController(ILogger<SentryController> logger, IHostingEnvironment env, SmtpClient smtpClient, IMapper mapper, IMailSender mailSender, IMailQueueRepository mailQueueRepository) {
 			_logger = logger;
 			_env = env;
 			_mapper = mapper;
 			_mailSender = mailSender;
+			_mailQueueRepository = mailQueueRepository;
 		}
 
 		[HttpPost]
@@ -44,7 +44,9 @@ namespace SentryToMail.API.Controllers {
 				}
 			}
 
-			await _mailSender.TryRenderSendOrAddToQueue(mail);
+			if (!await _mailSender.RenderAndTrySendMail(mail)) {
+				_mailQueueRepository.Add(mail);
+			}
 			return Ok();
 		}
 	}

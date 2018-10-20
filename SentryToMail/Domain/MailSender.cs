@@ -1,20 +1,21 @@
 ﻿using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SentryToMail.API.Model;
 
 namespace SentryToMail.API.Domain {
 	public class MailSender : IMailSender {
-		private readonly IMailQueueRepository _mailQueueRepository;
 		private readonly SmtpClient _smtpClient;
 		private readonly IViewRender _viewRender;
+		private readonly ILogger<MailSender> _logger;
 
-		public MailSender(SmtpClient smtpClient, IViewRender viewRender, IMailQueueRepository mailQueueRepository) {
+		public MailSender(SmtpClient smtpClient, IViewRender viewRender, ILogger<MailSender> logger) {
 			_smtpClient = smtpClient;
 			_viewRender = viewRender;
-			_mailQueueRepository = mailQueueRepository;
+			_logger = logger;
 		}
 
-		public async Task<bool> TryRenderSendOrAddToQueue(MailModel mail) {
+		public async Task<bool> RenderAndTrySendMail(MailModel mail) {
 			string from = $"errors-{mail.Environment}@appulate.com";
 			string to = $"errors-{mail.Environment}@appulate.com";
 			string subject = $"[Error] {mail.Message}";
@@ -23,13 +24,15 @@ namespace SentryToMail.API.Domain {
 				IsBodyHtml = true
 			};
 
+			_logger.LogInformation($"Trying to send mail: {mail.Id}");
 			try {
 				await _smtpClient.SendMailAsync(mailMessage);
-				return true;
 			} catch {
-				_mailQueueRepository.Add(mail);
+				_logger.LogWarning($"Mail {mail.Id} send is failed!");
 				return false;
 			}
+			_logger.LogInformation($"Mail {mail.Id} send successfully!");
+			return true;
 		}
 	}
 }

@@ -5,5 +5,6 @@ namespace SentryToMail.API.Domain {
 	public interface IMailQueueRepository {
 		void Add(MailModel mail);
 		HashSet<MailModel> PeekMailQueue();
+		void Delete(MailModel mail);
 	}
 }

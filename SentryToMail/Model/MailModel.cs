@@ -1,5 +1,8 @@
-﻿namespace SentryToMail.API.Model {
+﻿using System;
+
+namespace SentryToMail.API.Model {
 	public class MailModel {
+		public Guid Id { get; } = Guid.NewGuid();
 		public string Project { get; set; }
 		public string Environment { get; set; }
 		public string MachineName { get; set; }

@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using SentryToMail.API.Configurations;
 using SentryToMail.API.Domain;
 using SentryToMail.API.Utils.Extension;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace SentryToMail.API {
 	public class Startup {
@@ -29,18 +30,23 @@ namespace SentryToMail.API {
 		}
 
 		public void ConfigureServices(IServiceCollection services) {
-			services.AddMvcCore()
-			        .AddRazorViewEngine()
-			        .AddJsonFormatters(settings => settings.Formatting = Formatting.Indented)
-			        .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-			services.AddViewRender()
-			        .AddAutoMapper()
-			        .AddSmtpClient();
+			services
+				.AddMvcCore()
+				.AddRazorViewEngine()
+				.AddJsonFormatters(settings => settings.Formatting = Formatting.Indented)
+				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 			services
-				.AddScoped<IMailQueueRepository, MailQueueRepository>()
+				.AddViewRender()
+				.AddAutoMapper()
+				.AddSmtpClient();
+
+			services
+				.AddSingleton<IMailQueueRepository, MailQueueRepository>()
 				.AddScoped<IMailSender, MailSender>();
+
+			services
+				.AddHostedService<BackgroundMailSender>();
 		}
 	}
 }

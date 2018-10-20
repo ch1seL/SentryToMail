@@ -17,6 +17,12 @@ namespace SentryToMail.API.Domain {
 			}
 		}
 
+		public void Delete(MailModel mail) {
+			lock (SyncLock) {
+				_mailQueueRepository.Update(hashSet => hashSet.Remove(mail));
+			}
+		}
+
 		public void Add(MailModel mail) {
 			lock (SyncLock) {
 				_mailQueueRepository.Update(hashSet => hashSet.Add(mail));
