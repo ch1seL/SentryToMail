@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using SentryToMail.API.Configurations;
 using SentryToMail.API.Domain;
 using SentryToMail.API.Utils.Extension;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace SentryToMail.API {
 	public class Startup {

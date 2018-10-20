@@ -16,10 +16,10 @@ namespace SentryToMail.API.Domain {
 		}
 
 		public async Task<bool> RenderAndTrySendMail(MailModel mail) {
-			string from = $"errors-{mail.Environment}@appulate.com";
-			string to = $"errors-{mail.Environment}@appulate.com";
-			string subject = $"[Error] {mail.Message}";
-			string body = _viewRender.Render(name: "Emails/Sentry", mail);
+			string from = string.Format(Const.MailFromTemplate, mail.Environment);
+			string to = string.Format(Const.MailToTemplate, mail.Environment);
+			string subject = string.Format(Const.MailSubjectTemplate, mail.Message);
+			string body = _viewRender.Render(Const.MailBodyTemplatePath, mail);
 			var mailMessage = new MailMessage(from, to, subject, body) {
 				IsBodyHtml = true
 			};

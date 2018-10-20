@@ -8,7 +8,7 @@ namespace SentryToMail.API.Domain {
 		private readonly FileCollection<HashSet<MailModel>> _mailQueueRepository;
 
 		public MailQueueRepository() {
-			_mailQueueRepository = new FileCollection<HashSet<MailModel>>($"Repositories/{nameof(MailQueueRepository)}.json");
+			_mailQueueRepository = new FileCollection<HashSet<MailModel>>($"{Const.RepositoriesPath}{nameof(MailQueueRepository)}.json");
 		}
 
 		public HashSet<MailModel> PeekMailQueue() {

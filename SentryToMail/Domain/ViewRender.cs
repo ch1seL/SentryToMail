@@ -16,10 +16,7 @@ namespace SentryToMail.API.Domain {
 		private readonly ITempDataProvider _tempDataProvider;
 		private readonly IRazorViewEngine _viewEngine;
 
-		public ViewRender(
-			IRazorViewEngine viewEngine,
-			ITempDataProvider tempDataProvider,
-			IServiceProvider serviceProvider) {
+		public ViewRender(IRazorViewEngine viewEngine, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider) {
 			_viewEngine = viewEngine;
 			_tempDataProvider = tempDataProvider;
 			_serviceProvider = serviceProvider;
@@ -40,14 +37,10 @@ namespace SentryToMail.API.Domain {
 				var viewContext = new ViewContext(
 					actionContext,
 					view,
-					new ViewDataDictionary<TModel>(
-						new EmptyModelMetadataProvider(),
-						new ModelStateDictionary()) {
+					new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new ModelStateDictionary()) {
 						Model = model
 					},
-					new TempDataDictionary(
-						actionContext.HttpContext,
-						_tempDataProvider),
+					new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
 					output,
 					new HtmlHelperOptions());
 
