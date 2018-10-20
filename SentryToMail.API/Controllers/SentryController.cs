@@ -4,8 +4,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SentryToMail.API.Domain;
-using SentryToMail.API.Model;
+using SentryToMail.Domain;
+using SentryToMail.Models;
+using SentryToMail.Models.SentryDataModel;
 
 namespace SentryToMail.API.Controllers {
 	[Route(template: "api/[controller]")]

@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using SentryToMail.API.Configurations;
-using SentryToMail.API.Domain;
-using SentryToMail.API.Utils.Extension;
+using SentryToMail.API.Middleware;
+using SentryToMail.Configurations.Options;
+using SentryToMail.Domain;
+using SentryToMail.Utils.Extension;
 
 namespace SentryToMail.API {
 	public class Startup {
@@ -22,8 +23,7 @@ namespace SentryToMail.API {
 				app.UseDeveloperExceptionPage();
 			}
 
-			var securitySettings = Configuration.GetSection(nameof(SecuritySettings)).Get<SecuritySettings>();
-			app.UseToken(securitySettings.Token);
+			app.UseToken<TokenMiddleware>();
 
 			app.UseMvc();
 		}
@@ -36,16 +36,21 @@ namespace SentryToMail.API {
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 			services
-				.AddViewRender()
 				.AddAutoMapper()
 				.AddSmtpClient();
 
 			services
 				.AddSingleton<IMailQueueRepository, MailQueueRepository>()
+				.AddScoped<IViewRender, ViewRender>()
 				.AddScoped<IMailSender, MailSender>();
 
 			services
 				.AddHostedService<BackgroundMailSender>();
+
+			services
+				.AddOptions()
+				.Configure<RepositoriesOptions>(Configuration.GetSection(nameof(RepositoriesOptions)))
+				.Configure<MailOptions>(Configuration.GetSection(nameof(MailOptions)));
 		}
 	}
 }
