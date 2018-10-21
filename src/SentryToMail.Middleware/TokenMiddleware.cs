@@ -1,15 +1,17 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using SentryToMail.Configurations;
 
 namespace SentryToMail.Middleware {
 	public class TokenMiddleware {
 		private readonly RequestDelegate _next;
 		private readonly string _token;
 
-		public TokenMiddleware(RequestDelegate next, string token) {
+		public TokenMiddleware(RequestDelegate next, IOptions<SecurityOptions> securityOptionsAccessor) {
 			_next = next;
-			_token = token;
+			_token = securityOptionsAccessor.Value.Token;
 		}
 
 		public async Task InvokeAsync(HttpContext context) {

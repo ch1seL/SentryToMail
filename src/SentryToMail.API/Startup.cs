@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using SentryToMail.Configurations;
 using SentryToMail.Configurations.Options;
 using SentryToMail.Domain;
-using SentryToMail.Utils.Extension;
+using SentryToMail.Middleware;
 
 namespace SentryToMail.API {
 	public class Startup {
@@ -23,8 +23,11 @@ namespace SentryToMail.API {
 				app.UseDeveloperExceptionPage();
 			}
 
-			app.UseToken()
-			   .UseMvc();
+			if (!env.IsDevelopment()) {
+				app.UseMiddleware<TokenMiddleware>();
+			}
+
+			app.UseMvc();
 		}
 
 		public void ConfigureServices(IServiceCollection services) {
@@ -48,6 +51,7 @@ namespace SentryToMail.API {
 
 			services
 				.AddOptions()
+				.Configure<SecurityOptions>(Configuration.GetSection(nameof(SecurityOptions)))
 				.Configure<RepositoriesOptions>(Configuration.GetSection(nameof(RepositoriesOptions)))
 				.Configure<MailOptions>(Configuration.GetSection(nameof(MailOptions)))
 				.Configure<SmtpOptions>(Configuration.GetSection(nameof(SmtpOptions)))

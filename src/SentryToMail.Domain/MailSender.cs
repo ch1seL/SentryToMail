@@ -23,11 +23,12 @@ namespace SentryToMail.Domain {
 		public async Task<bool> RenderAndTrySendMail(MailModel mail) {
 			string from = string.Format(_mailOptions.MailFromTemplate, mail.Environment);
 			string to = string.Format(_mailOptions.MailToTemplate, mail.Environment);
-			string subject = string.Format(_mailOptions.MailSubjectTemplate, mail.Message);
+			string subject;
 			string body;
 
 			_logger.LogInformation($"Trying to render mail: {mail.Id}");
 			try {
+				subject = _viewRender.Render(_mailOptions.MailSubjectTemplatePath, mail);
 				body = _viewRender.Render(_mailOptions.MailBodyTemplatePath, mail);
 			} catch (Exception ex) {
 				_logger.LogWarning(ex, $"Mail {mail.Id} render is failed!");

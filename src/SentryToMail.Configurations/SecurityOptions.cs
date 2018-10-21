@@ -1,5 +1,5 @@
 ﻿namespace SentryToMail.Configurations {
-	public class SecuritySettings {
+	public class SecurityOptions {
 		public string Token { get; set; }
 	}
 }
