@@ -1,0 +1,4 @@
+**/bin
+**/obj
+src/SentryToMail.API/Properties
+*.DotSettings
