@@ -7,15 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SentryToMail.Configurations\SentryToMail.Configurations.csproj" />
     <ProjectReference Include="..\SentryToMail.Domain\SentryToMail.Domain.csproj" />
+    <ProjectReference Include="..\SentryToMail.Middleware\SentryToMail.Middleware.csproj" />
     <ProjectReference Include="..\SentryToMail.Models\SentryToMail.Models.csproj" />
     <ProjectReference Include="..\SentryToMail.Utils\SentryToMail.Utils.csproj" />
   </ItemGroup>
