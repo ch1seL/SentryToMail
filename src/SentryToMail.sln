@@ -17,10 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentryToMail.Configurations
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6823F574-4413-4D61-AB06-743FA18A14C1}"
 	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
+		..\Dockerfile = ..\Dockerfile
+		..\global.json = ..\global.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SentryToMail.Middleware", "SentryToMail.Middleware\SentryToMail.Middleware.csproj", "{7015D75B-1BE3-4BB9-8ECF-5C31FCD879B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentryToMail.Middleware", "SentryToMail.Middleware\SentryToMail.Middleware.csproj", "{7015D75B-1BE3-4BB9-8ECF-5C31FCD879B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -12,6 +12,7 @@ namespace SentryToMail.Utils.Extension {
 				var securitySettings = configuration.GetSection(nameof(SecuritySettings)).Get<SecuritySettings>();
 				token = securitySettings.Token;
 			}
+
 			return string.IsNullOrWhiteSpace(token) ? builder : builder.UseMiddleware<TokenMiddleware>(token);
 		}
 	}

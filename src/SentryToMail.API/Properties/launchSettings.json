@@ -14,9 +14,9 @@
 			"launchBrowser": false,
 			"launchUrl": "api/values",
 			"applicationUrl": "http://0.0.0.0:1081",
-			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Development"
-			}
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
 		},
 		"Production": {
 			"commandName": "Project",
