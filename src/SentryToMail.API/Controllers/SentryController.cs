@@ -49,11 +49,7 @@ namespace SentryToMail.API.Controllers {
 			}
 			if (string.IsNullOrWhiteSpace(mailEnvironment) || mailEnvironment == "local") {
 				wrongEnvironmentError = "Empty or Local environment detected!";
-			} else if (mailEnvironment == "Production" && !_env.IsProduction()) {
-				wrongEnvironmentError = "Production environment detected!";
-			} else if (mailEnvironment != "Production" && !_env.IsStaging()) {
-				wrongEnvironmentError = "Not development environment detected!";
-			}
+			} 
 
 			return wrongEnvironmentError == null;
 		}
