@@ -2,7 +2,7 @@
 
 namespace SentryToMail.Models.SentryDataModel {
 	public class Stacktrace {
-		[JsonProperty(propertyName: "frames")]
+		[JsonProperty("frames")]
 		public Frame[] Frames { get; set; }
 	}
 }

@@ -2,19 +2,19 @@
 
 namespace SentryToMail.Models.SentryDataModel {
 	public class RequestInformation {
-		[JsonProperty(propertyName: "New Session")]
+		[JsonProperty("New Session")]
 		public string NewSession { get; set; }
 
-		[JsonProperty(propertyName: "Date & Time")]
+		[JsonProperty("Date & Time")]
 		public string DateTime { get; set; }
 
-		[JsonProperty(propertyName: "ApplicationId")]
+		[JsonProperty("ApplicationId")]
 		public string ApplicationId { get; set; }
 
-		[JsonProperty(propertyName: "Host")]
+		[JsonProperty("Host")]
 		public string Host { get; set; }
 
-		[JsonProperty(propertyName: "type")]
+		[JsonProperty("type")]
 		public string Type { get; set; }
 	}
 }

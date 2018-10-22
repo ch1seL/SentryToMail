@@ -82,29 +82,20 @@
 						@if (Model.User != null) {
 							<div class="interface" style="font-weight: 300; margin-bottom: 30px;">
 								<h3 class="title" style="font-size: 18px; font-weight: bold; margin: 0 0 15px;">User</h3>
-								<table class="reset" style="border-collapse: collapse; border-spacing: 0; width: 100%; font-weight: 300; margin: 0 -5px;">
-									<tbody>
+								<table style="border-collapse: separate; border-spacing: 5px; width: 100%; font-weight: 300; margin: 0 -5px;">
+									<colgroup style="font-weight: 300;"> <col style="width: 130px; font-weight: 300;"/> </colgroup>
+									<tbody style="font-weight: 300;">
 									<tr style="font-weight: 300;">
-										<td style="border-radius: 3px; padding: 0; font-weight: 400; margin: 0 0 5px; background-color: #fff; text-align: left;">
-											<table style="border-collapse: separate; border-spacing: 5px; width: 100%; font-weight: 300; margin: 0;">
-												<colgroup style="font-weight: 300;"> <col style="width: 130px; font-weight: 300;"/> </colgroup>
-												<tbody style="font-weight: 300;">
-												<tr style="font-weight: 300;">
-													<th style="color: #968ba0; text-align: left; min-width: 60px; padding: 5px 0; font-weight: 500;">ID:</th>
-													<td class="code" style="border-radius: 3px; padding: 5px 10px; font-weight: 400; margin: 0 0 5px; background-color: #f4f5f6; text-align: left;">@Model.User.Id</td>
-												</tr>
-												<tr style="font-weight: 300;">
-													<th style="color: #968ba0; text-align: left; min-width: 60px; padding: 5px 0; font-weight: 500;">Username:</th>
-													<td class="code" style="border-radius: 3px; padding: 5px 10px; font-weight: 400; margin: 0 0 5px; background-color: #f4f5f6; text-align: left;">@Model.User.UserName</td>
-												</tr>
-												<tr style="font-weight: 300;">
-													<th style="color: #968ba0; text-align: left; min-width: 60px; padding: 5px 0; font-weight: 500;">Email:</th>
-													<td class="code" style="border-radius: 3px; padding: 5px 10px; font-weight: 400; margin: 0 0 5px; background-color: #f4f5f6; text-align: left;">@Model.User.Email</td>
-												</tr>
-												</tbody>
-											</table>
-										</td>
-										<td style="border-radius: 3px; vertical-align: top; padding: 5px 0 0; width: 64px; font-weight: 400; margin: 0 0 5px; background-color: #fff; text-align: right;"><span class="avatar-container" style="width: inherit; vertical-align: text-top; margin-right: 5px; position: relative; font-weight: 300; display: inline-block; height: 20px;"> <span class="html-avatar" style="border-radius: 3px; font-size: 32px; vertical-align: middle; display: inline-block; color: #fff; height: 64px; width: 64px; font-weight: 300; line-height: 64px; background-color: #6c5fc7; text-align: center;">S</span> </span></td>
+										<th style="color: #968ba0; text-align: left; min-width: 60px; padding: 5px 0; font-weight: 500;">ID:</th>
+										<td style="border-radius: 3px; padding: 5px 10px; font-weight: 400; margin: 0 0 5px; background-color: #f4f5f6; text-align: left;">@Model.User.Id</td>
+									</tr>
+									<tr style="font-weight: 300;">
+										<th style="color: #968ba0; text-align: left; min-width: 60px; padding: 5px 0; font-weight: 500;">UserName:</th>
+										<td style="border-radius: 3px; padding: 5px 10px; font-weight: 400; margin: 0 0 5px; background-color: #f4f5f6; text-align: left;">@Model.User.UserName</td>
+									</tr>
+									<tr style="font-weight: 300;">
+										<th style="color: #968ba0; text-align: left; min-width: 60px; padding: 5px 0; font-weight: 500;">Email:</th>
+										<td style="border-radius: 3px; padding: 5px 10px; font-weight: 400; margin: 0 0 5px; background-color: #f4f5f6; text-align: left;">@Model.User.Email</td>
 									</tr>
 									</tbody>
 								</table>
@@ -113,7 +104,7 @@
 						@if (Model.Tags.Count > 0) {
 							<h3 style="font-size: 18px; font-weight: bold; margin: 0 0 20px;">Tags</h3>
 							<ul class="tag-list" style="list-style: none; padding: 0; font-weight: 300; margin: 0 0 20px;">
-								@foreach (string key in Model.Tags.AllKeys) {
+								@foreach (string key in Model.Tags.Keys) {
 									<li style="border-radius: 3px; margin-right: 5px; margin-bottom: 10px; padding: 5px 10px 6px; font-weight: 300; display: inline-block; background-color: #f4f5f6;"><strong style="font-weight: 200;">@key=@Model.Tags[key]</strong></li>
 								}
 							</ul>

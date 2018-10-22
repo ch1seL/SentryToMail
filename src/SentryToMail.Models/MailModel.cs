@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using Newtonsoft.Json;
-using SentryToMail.Utils.Extension;
 
 namespace SentryToMail.Models {
 	public class MailModel {
@@ -18,14 +17,14 @@ namespace SentryToMail.Models {
 		public string Additional { get; set; }
 		public RequestMailModel Request { get; set; }
 		public UserMailModel User { get; set; }
-		public NameValueCollection Tags { get; set; }
+		public Dictionary<string, string> Tags { get; set; }
 
 		[JsonIgnore]
-		public string Environment => Tags.FindValue(nameof(Environment));
+		public string Environment => Tags.GetValueOrDefault(nameof(Environment).ToLower());
 		[JsonIgnore]
-		public string Module => Tags.FindValue(nameof(Module));
+		public string Module => Tags.GetValueOrDefault(nameof(Module).ToLower());
 		[JsonIgnore]
-		public string MachineName => Tags.FindValue(nameof(MachineName));
+		public string MachineName => Tags.GetValueOrDefault(nameof(MachineName));
 	}
 
 	public class UserMailModel {

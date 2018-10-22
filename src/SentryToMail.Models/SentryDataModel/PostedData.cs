@@ -2,7 +2,7 @@
 
 namespace SentryToMail.Models.SentryDataModel {
 	public class PostedData {
-		[JsonProperty(propertyName: "type")]
+		[JsonProperty("type")]
 		public string Type { get; set; }
 	}
 }

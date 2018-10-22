@@ -1,4 +1,5 @@
-﻿using SentryToMail.Models.SentryDataModel;
+﻿using System;
+using SentryToMail.Models.SentryDataModel;
 
 namespace SentryToMail.Models.Extensions {
 	public static class FrameExtension {
@@ -7,8 +8,7 @@ namespace SentryToMail.Models.Extensions {
 		}
 
 		public static string ToHtmlString(this Frame frame) {
-			return
-				$"{(frame.IsFile() ? $"File {frame.Filename}" : $"Module {frame.Module}")}, {(frame.IsFile() ? $"line {frame.Lineno}, " : string.Empty)} in {frame.Function}<br>&nbsp;&nbsp;{frame.ContextLine}<br>";
+			return $"  at {frame.ContextLine} {(frame.IsFile() ? $"in {frame.Filename}:line {frame.Lineno}" : string.Empty)}";
 		}
 	}
 }

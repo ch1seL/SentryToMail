@@ -2,14 +2,14 @@
 
 namespace SentryToMail.Models.SentryDataModel {
 	public class User {
-		[JsonProperty(propertyName: "username")]
+		[JsonProperty("username")]
 		public string Username { get; set; }
 
-		[JsonProperty(propertyName: "id")]
+		[JsonProperty("id")]
 		[JsonConverter(typeof(ParseStringConverter))]
 		public long Id { get; set; }
 
-		[JsonProperty(propertyName: "email")]
+		[JsonProperty("email")]
 		public string Email { get; set; }
 	}
 }

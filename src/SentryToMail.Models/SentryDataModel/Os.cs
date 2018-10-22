@@ -2,16 +2,16 @@
 
 namespace SentryToMail.Models.SentryDataModel {
 	public class Os {
-		[JsonProperty(propertyName: "raw_description")]
+		[JsonProperty("raw_description")]
 		public string RawDescription { get; set; }
 
-		[JsonProperty(propertyName: "version")]
+		[JsonProperty("version")]
 		public string Version { get; set; }
 
-		[JsonProperty(propertyName: "type")]
+		[JsonProperty("type")]
 		public string Type { get; set; }
 
-		[JsonProperty(propertyName: "name")]
+		[JsonProperty("name")]
 		public string Name { get; set; }
 	}
 }

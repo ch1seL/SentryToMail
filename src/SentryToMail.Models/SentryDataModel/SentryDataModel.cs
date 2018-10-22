@@ -2,42 +2,36 @@
 using Newtonsoft.Json;
 
 namespace SentryToMail.Models.SentryDataModel {
-	public partial class SentryDataModel {
-		[JsonProperty(propertyName: "project")]
+	public class SentryDataModel {
+		[JsonProperty("project")]
 		public string Project { get; set; }
 
-		[JsonProperty(propertyName: "project_name")]
+		[JsonProperty("project_name")]
 		public string ProjectName { get; set; }
 
-		[JsonProperty(propertyName: "culprit")]
+		[JsonProperty("culprit")]
 		public string Culprit { get; set; }
 
-		[JsonProperty(propertyName: "project_slug")]
+		[JsonProperty("project_slug")]
 		public string ProjectSlug { get; set; }
 
-		[JsonProperty(propertyName: "url")]
+		[JsonProperty("url")]
 		public Uri Url { get; set; }
 
-		[JsonProperty(propertyName: "logger")]
+		[JsonProperty("logger")]
 		public object Logger { get; set; }
 
-		[JsonProperty(propertyName: "level")]
+		[JsonProperty("level")]
 		public string Level { get; set; }
 
-		[JsonProperty(propertyName: "message")]
+		[JsonProperty("message")]
 		public string Message { get; set; }
 
-		[JsonProperty(propertyName: "id")]
+		[JsonProperty("id")]
 		[JsonConverter(typeof(ParseStringConverter))]
 		public long Id { get; set; }
 
-		[JsonProperty(propertyName: "event")]
+		[JsonProperty("event")]
 		public Event Event { get; set; }
-	}
-
-	public partial class SentryDataModel {
-		public static SentryDataModel FromJson(string json) {
-			return JsonConvert.DeserializeObject<SentryDataModel>(json, Converter.Settings);
-		}
 	}
 }

@@ -3,8 +3,6 @@ using Newtonsoft.Json;
 
 namespace SentryToMail.Models.SentryDataModel {
 	internal class ParseStringConverter : JsonConverter {
-		public static readonly ParseStringConverter Singleton = new ParseStringConverter();
-
 		public override bool CanConvert(Type t) {
 			return t == typeof(long) || t == typeof(long?);
 		}
@@ -15,19 +13,21 @@ namespace SentryToMail.Models.SentryDataModel {
 			}
 			var value = serializer.Deserialize<string>(reader);
 			long l;
-			if (long.TryParse(value, out l)) {
+			if (Int64.TryParse(value, out l)) {
 				return l;
 			}
-			throw new Exception(message: "Cannot unmarshal type long");
+			throw new Exception("Cannot unmarshal type long");
 		}
 
 		public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer) {
 			if (untypedValue == null) {
-				serializer.Serialize(writer, value: null);
+				serializer.Serialize(writer, null);
 				return;
 			}
 			var value = (long)untypedValue;
 			serializer.Serialize(writer, value.ToString());
 		}
+
+		public static readonly ParseStringConverter Singleton = new ParseStringConverter();
 	}
 }

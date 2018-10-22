@@ -2,31 +2,31 @@
 
 namespace SentryToMail.Models.SentryDataModel {
 	public class Contexts {
-		[JsonProperty(propertyName: "Page Path")]
+		[JsonProperty("Page Path")]
 		public PagePath PagePath { get; set; }
 
-		[JsonProperty(propertyName: "Session vars")]
+		[JsonProperty("Session vars")]
 		public SessionVars SessionVars { get; set; }
 
-		[JsonProperty(propertyName: "Session Objects")]
+		[JsonProperty("Session Objects")]
 		public SessionObjects SessionObjects { get; set; }
 
-		[JsonProperty(propertyName: "Posted data")]
+		[JsonProperty("Posted data")]
 		public PostedData PostedData { get; set; }
 
-		[JsonProperty(propertyName: "Version Information")]
+		[JsonProperty("Version Information")]
 		public VersionInformation VersionInformation { get; set; }
 
-		[JsonProperty(propertyName: "runtime")]
+		[JsonProperty("runtime")]
 		public Os Runtime { get; set; }
 
-		[JsonProperty(propertyName: "os")]
+		[JsonProperty("os")]
 		public Os Os { get; set; }
 
-		[JsonProperty(propertyName: "Request Information")]
+		[JsonProperty("Request Information")]
 		public RequestInformation RequestInformation { get; set; }
 
-		[JsonProperty(propertyName: "browser")]
+		[JsonProperty("browser")]
 		public Browser Browser { get; set; }
 	}
 }

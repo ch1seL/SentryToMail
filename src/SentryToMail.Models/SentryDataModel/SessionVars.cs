@@ -2,13 +2,13 @@
 
 namespace SentryToMail.Models.SentryDataModel {
 	public class SessionVars {
-		[JsonProperty(propertyName: "type")]
+		[JsonProperty("type")]
 		public string Type { get; set; }
 
-		[JsonProperty(propertyName: "pathLog")]
+		[JsonProperty("pathLog")]
 		public string PathLog { get; set; }
 
-		[JsonProperty(propertyName: "isRootLogin")]
+		[JsonProperty("isRootLogin")]
 		public string IsRootLogin { get; set; }
 	}
 }

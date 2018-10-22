@@ -2,10 +2,10 @@
 
 namespace SentryToMail.Models.SentryDataModel {
 	public class Package {
-		[JsonProperty(propertyName: "Version")]
+		[JsonProperty("Version")]
 		public string Version { get; set; }
 
-		[JsonProperty(propertyName: "Name")]
+		[JsonProperty("Name")]
 		public string Name { get; set; }
 	}
 }

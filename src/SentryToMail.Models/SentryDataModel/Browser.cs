@@ -2,10 +2,10 @@
 
 namespace SentryToMail.Models.SentryDataModel {
 	public class Browser {
-		[JsonProperty(propertyName: "type")]
+		[JsonProperty("type")]
 		public string Type { get; set; }
 
-		[JsonProperty(propertyName: "name")]
+		[JsonProperty("name")]
 		public string Name { get; set; }
 	}
 }

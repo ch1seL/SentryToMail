@@ -2,13 +2,13 @@
 
 namespace SentryToMail.Models.SentryDataModel {
 	public class Sdk {
-		[JsonProperty(propertyName: "version")]
+		[JsonProperty("version")]
 		public string Version { get; set; }
 
-		[JsonProperty(propertyName: "name")]
+		[JsonProperty("name")]
 		public string Name { get; set; }
 
-		[JsonProperty(propertyName: "packages")]
+		[JsonProperty("packages")]
 		public Package[] Packages { get; set; }
 	}
 }

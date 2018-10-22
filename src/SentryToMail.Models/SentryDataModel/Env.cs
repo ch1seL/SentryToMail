@@ -2,7 +2,7 @@
 
 namespace SentryToMail.Models.SentryDataModel {
 	public class Env {
-		[JsonProperty(propertyName: "IP Address")]
+		[JsonProperty("IP Address")]
 		public string IpAddress { get; set; }
 	}
 }
