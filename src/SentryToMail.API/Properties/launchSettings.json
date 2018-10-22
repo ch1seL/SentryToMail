@@ -15,9 +15,7 @@
 			"launchUrl": "api/values",
 			"applicationUrl": "http://0.0.0.0:1081",
 			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Development",
-				"MailOptions:MailFromTemplate": "errors-{0}@appulate.com",
-				"MailOptions:MailToTemplate": "errors-{0}@appulate.com"
+				"ASPNETCORE_ENVIRONMENT": "Development"
 			}
 		},
 		"Production": {
