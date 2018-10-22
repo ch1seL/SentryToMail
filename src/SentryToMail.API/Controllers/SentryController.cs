@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SentryToMail.Domain;
 using SentryToMail.Models;
@@ -11,15 +10,13 @@ namespace SentryToMail.API.Controllers {
 	[Route(template: "api/[controller]")]
 	[ApiController]
 	public class SentryController : Controller {
-		private readonly IHostingEnvironment _env;
 		private readonly ILogger<SentryController> _logger;
 		private readonly IMapper _mapper;
 		private readonly IMailSender _mailSender;
 		private readonly IMailQueueRepository _mailQueueRepository;
 
-		public SentryController(ILogger<SentryController> logger, IHostingEnvironment env, IMapper mapper, IMailSender mailSender, IMailQueueRepository mailQueueRepository) {
+		public SentryController(ILogger<SentryController> logger, IMapper mapper, IMailSender mailSender, IMailQueueRepository mailQueueRepository) {
 			_logger = logger;
-			_env = env;
 			_mapper = mapper;
 			_mailSender = mailSender;
 			_mailQueueRepository = mailQueueRepository;
