@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using SentryToMail.Configurations;
 using SentryToMail.Configurations.Options;
 using SentryToMail.Domain;
 using SentryToMail.Middleware;
+using SentryToMail.Models.AutoMapper;
 
 namespace SentryToMail.API {
 	public class Startup {
@@ -38,7 +38,7 @@ namespace SentryToMail.API {
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 			services
-				.AddAutoMapper();
+				.AddAutoMapper(typeof(SentryToMailModelProfile));
 
 			services
 				.AddSingleton<IMailQueueRepository, MailQueueRepository>()

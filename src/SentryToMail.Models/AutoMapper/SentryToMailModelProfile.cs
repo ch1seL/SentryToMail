@@ -19,8 +19,9 @@ namespace SentryToMail.Models.AutoMapper {
 	public class TagMapper : IMappingAction<SentryDataModel.SentryDataModel, MailModel> {
 		public void Process(SentryDataModel.SentryDataModel source, MailModel destination) {
 			NameValueCollection tags = source.Event.Tags.ToNameValue();
-			destination.Environment = tags[nameof(destination.Environment)];
-			destination.Module = tags[nameof(destination.Module)];
+			destination.Environment = tags.FindValue(nameof(destination.Environment));
+			destination.Module = tags.FindValue(nameof(destination.Module));
+			destination.MachineName = tags.FindValue(nameof(destination.MachineName));
 		}
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace SentryToMail.Models {
 	public class MailModel {
-		public Guid Id { get; set; } = Guid.NewGuid();
+		public Guid Id { get; set; }
 		public string Project { get; set; }
 		public string Environment { get; set; }
 		public string MachineName { get; set; }
