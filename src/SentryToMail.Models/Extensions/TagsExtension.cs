@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 
-namespace SentryToMail.Utils.Extension {
-	public static class StringArrayExtension {
+namespace SentryToMail.Models.Extensions {
+	public static class TagsExtension {
 		public static NameValueCollection ToNameValue(this string[][] array) {
 			var nv = new NameValueCollection();
 			foreach (string[] result in array) {

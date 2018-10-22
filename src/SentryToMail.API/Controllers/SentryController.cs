@@ -44,9 +44,6 @@ namespace SentryToMail.API.Controllers {
 		private bool TryCheckEnvironment(string mailEnvironment, out string wrongEnvironmentError) {
 			wrongEnvironmentError = null;
 
-			if (_env.IsDevelopment()) {
-				return true;
-			}
 			if (string.IsNullOrWhiteSpace(mailEnvironment) || mailEnvironment == "local") {
 				wrongEnvironmentError = "Empty or Local environment detected!";
 			} 

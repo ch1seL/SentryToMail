@@ -31,7 +31,7 @@ namespace SentryToMail.Domain {
 				subject = _viewRender.Render(_mailOptions.MailSubjectTemplatePath, mail);
 				body = _viewRender.Render(_mailOptions.MailBodyTemplatePath, mail);
 			} catch (Exception ex) {
-				_logger.LogWarning(ex, $"Mail {mail.Id} render is failed!");
+				_logger.LogError(ex, $"Mail {mail.Id} render is failed!");
 				return false;
 			}
 			_logger.LogInformation($"Mail {mail.Id} has been render successfully!");
@@ -44,7 +44,7 @@ namespace SentryToMail.Domain {
 			try {
 				await _smtpClient.SendMailAsync(mailMessage);
 			} catch (Exception ex) {
-				_logger.LogWarning(ex, $"Mail {mail.Id} send is failed!");
+				_logger.LogError(ex, $"Mail {mail.Id} send is failed!");
 				return false;
 			}
 			_logger.LogInformation($"Mail {mail.Id} has been send successfully!");
