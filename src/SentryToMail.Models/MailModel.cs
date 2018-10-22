@@ -10,5 +10,8 @@ namespace SentryToMail.Models {
 		public string Message { get; set; }
 		public string Module { get; set; }
 		public string Culprit { get; set; }
+		public string Level { get; set; }
+		public string ProjectSlug { get; set; }
+		public string ProjectName { get; set; }
 	}
 }
