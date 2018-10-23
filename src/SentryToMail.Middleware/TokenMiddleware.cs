@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -19,9 +20,10 @@ namespace SentryToMail.Middleware {
 				context.Response.StatusCode = 403;
 				context.Response.ContentType = "application/json";
 				await context.Response.WriteAsync(JsonConvert.SerializeObject(new { Error = "Token is invalid" }));
-			} else {
-				await _next.Invoke(context);
+				throw new UnauthorizedAccessException("Invalid token");
 			}
+
+			await _next.Invoke(context);
 		}
 	}
 }
