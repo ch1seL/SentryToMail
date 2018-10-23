@@ -9,7 +9,8 @@ namespace SentryToMail.API {
 
 		public static IWebHostBuilder CreateWebHostBuilder(string[] args) {
 			return WebHost.CreateDefaultBuilder(args)
-			              .UseStartup<Startup>();
+			              .UseStartup<Startup>()
+			              .UseSentry();
 		}
 	}
 }

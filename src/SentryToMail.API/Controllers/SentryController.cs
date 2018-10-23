@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -36,6 +37,11 @@ namespace SentryToMail.API.Controllers {
 			}
 			_mailQueueRepository.Add(mail);
 			return Ok(new { Result = $"Mail {mail.Id} queued" });
+		}
+
+		[HttpGet("throw")]
+		public IActionResult Throw() {
+			throw new Exception("throw test exception");
 		}
 
 		private bool TryCheckEnvironment(string mailEnvironment, out string wrongEnvironmentError) {
