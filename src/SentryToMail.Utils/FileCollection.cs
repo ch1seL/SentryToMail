@@ -48,9 +48,9 @@ namespace SentryToMail.Utils {
 		private Task WriteJsonToFile(string filePath, T obj) {
 			return Task.Run(() => {
 				using (FileStream stream = File.Create(filePath)) {
-					using (var reader = new StreamWriter(stream)) {
+					using (var writer = new StreamWriter(stream)) {
 						JsonSerializer serializer = JsonSerializer.Create(_serializerSettings);
-						var jsonTextWriter = new JsonTextWriter(reader);
+						var jsonTextWriter = new JsonTextWriter(writer);
 						serializer.Serialize(jsonTextWriter, obj);
 						jsonTextWriter.Flush();
 					}

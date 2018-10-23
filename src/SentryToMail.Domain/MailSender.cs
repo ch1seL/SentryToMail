@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Mail;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,7 @@ namespace SentryToMail.Domain {
 			_mailOptions = mailOptionsAccessor.Value;
 		}
 
-		public async Task<bool> RenderAndTrySendMail(MailModel mail) {
+		public async Task<bool> RenderAndTrySendMail(MailModel mail, CancellationToken cancellationToken = default) {
 			string from = string.Format(_mailOptions.MailFromTemplate, mail.Environment);
 			string to = string.Format(_mailOptions.MailToTemplate, mail.Environment);
 			string subject;
@@ -48,7 +49,7 @@ namespace SentryToMail.Domain {
 			_logger.LogInformation($"Trying to send mail: {mail.Id}");
 			try {
 				using (var smtpClient = _serviceProvider.GetRequiredService<ISmtpClient>()) {
-					await smtpClient.SendMailAsync(mailMessage);
+					await smtpClient.SendMailAsync(mailMessage, cancellationToken);
 				}
 			} catch (Exception ex) {
 				_logger.LogError(ex, $"Mail {mail.Id} send is failed!");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Mail;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using SentryToMail.Configurations.Options;
@@ -13,10 +14,11 @@ namespace SentryToMail.Domain {
 			SmtpClient = new SmtpClient(smtpOptions.Host, smtpOptions.Port);
 		}
 
-		public Task SendMailAsync(MailMessage mailMessage) {
+		public Task SendMailAsync(MailMessage mailMessage, CancellationToken cancellationToken = default) {
+			cancellationToken.Register(() => SmtpClient.SendAsyncCancel());
 			return SmtpClient.SendMailAsync(mailMessage);
 		}
-		
+
 		void IDisposable.Dispose() {
 			SmtpClient.Dispose();
 		}

@@ -36,10 +36,9 @@ namespace SentryToMail.Domain {
 					if (mailQueue.Count > 0) {
 						_logger.LogInformation($"Found {mailQueue.Count} mails in repository");
 						var mailSender = serviceProvider.GetRequiredService<IMailSender>();
-
 						IEnumerable<Task> tasks = mailQueue.Select(async m => {
 							await Semaphore.WaitAsync(stoppingToken);
-							bool isSuccess = await mailSender.RenderAndTrySendMail(m);
+							bool isSuccess = await mailSender.RenderAndTrySendMail(m, stoppingToken);
 							if (isSuccess) {
 								await mailQueueRepository.Delete(m);
 								useDelay = false;
