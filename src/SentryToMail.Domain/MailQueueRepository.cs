@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -13,6 +14,7 @@ namespace SentryToMail.Domain {
 		private readonly ILogger<MailQueueRepository> _logger;
 		private readonly IHub _sentry;
 		private readonly FileCollection<HashSet<MailModel>> _mailQueueRepository;
+		private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
 		public MailQueueRepository(IOptions<RepositoriesOptions> repositoryOptionsAccessor, ILogger<MailQueueRepository> logger, IHub sentry) {
 			_logger = logger;
@@ -27,18 +29,18 @@ namespace SentryToMail.Domain {
 		public async Task Delete(MailModel mail) {
 			_logger.LogInformation($"Delete mail {mail.Id} from repository");
 			try {
-				int updatedRecords = await _mailQueueRepository.UpdateAsync(hashSet => hashSet.RemoveWhere(model => model.Id == mail.Id));
+				await SemaphoreSlim.WaitAsync();
+				int updatedRecords = await _mailQueueRepository.Update(hashSet => hashSet.RemoveWhere(model => model.Id == mail.Id));
+				SemaphoreSlim.Release();
 				if (updatedRecords == 1) {
 					_logger.LogInformation($"Mail {mail.Id} has been deleted from repository!");
 					return;
 				}
 				if (updatedRecords == 0) {
-					_logger.LogError($"Mail {mail.Id} was not found in repository!");
-					throw new Exception("Mail {mail.Id} was not found in repository!");
+					throw new Exception($"Mail {mail.Id} was not found in repository!");
 				}
 				if (updatedRecords > 1) {
-					_logger.LogError($"Mail {mail.Id} was not found in repository!");
-					throw new Exception("Mail {mail.Id} was not found in repository!");
+					throw new Exception($"More than one mail id:{mail.Id} founded in repository!");
 				}
 			} catch (Exception ex) {
 				_logger.LogError(ex, $"Unknown error while deleting {mail.Id} from repository!");
@@ -47,7 +49,10 @@ namespace SentryToMail.Domain {
 		}
 
 		public async Task Add(MailModel mail) {
-			bool success = await _mailQueueRepository.UpdateAsync(hashSet => hashSet.Add(mail));
+			await SemaphoreSlim.WaitAsync();
+			bool success = await _mailQueueRepository.Update(hashSet => hashSet.Add(mail));
+			SemaphoreSlim.Release();
+
 			if (!success) {
 				throw new Exception("Element is already present");
 			}

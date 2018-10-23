@@ -7,9 +7,7 @@ using Newtonsoft.Json;
 namespace SentryToMail.Utils {
 	public class FileCollection<T> where T : class, ISerializable, new() {
 		private readonly string _filePath;
-		private T _collection;
-		private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
-			{ Formatting = Formatting.Indented };
+		private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { Formatting = Formatting.Indented };
 
 		public FileCollection(string filePath) {
 			_filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filePath);
@@ -27,12 +25,10 @@ namespace SentryToMail.Utils {
 			return ReadJsonFromFile(_filePath);
 		}
 
-		public async Task<TR> UpdateAsync<TR>(Func<T, TR> func) {
-			_collection = await ReadJsonFromFile(_filePath);
-
-			TR result = func(_collection);
-
-			await WriteJsonToFile(_filePath, _collection);
+		public async Task<TR> Update<TR>(Func<T, TR> func) {
+			T collection = await PeekAll();
+			TR result = func(collection);
+			await WriteJsonToFile(_filePath, collection);
 
 			return result;
 		}
@@ -51,7 +47,7 @@ namespace SentryToMail.Utils {
 
 		private Task WriteJsonToFile(string filePath, T obj) {
 			return Task.Run(() => {
-				using (FileStream stream = File.OpenWrite(filePath)) {
+				using (FileStream stream = File.Create(filePath)) {
 					using (var reader = new StreamWriter(stream)) {
 						JsonSerializer serializer = JsonSerializer.Create(_serializerSettings);
 						var jsonTextWriter = new JsonTextWriter(reader);

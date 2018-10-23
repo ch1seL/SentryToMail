@@ -43,9 +43,9 @@ namespace SentryToMail.API {
 
 			services
 				.AddSingleton<IMailQueueRepository, MailQueueRepository>()
-				.AddTransient<ISmtpClient, SmtpClientWrapper>()
-				.AddTransient<IViewRender, ViewRender>()
-				.AddTransient<IMailSender, MailSender>();
+				.AddScoped<IViewRender, ViewRender>()
+				.AddScoped<IMailSender, MailSender>()
+				.AddTransient<ISmtpClient, SmtpClientWrapper>();
 
 			services
 				.AddHostedService<BackgroundMailSender>();

@@ -35,6 +35,7 @@ namespace SentryToMail.API.Controllers {
 			if (await _mailSender.RenderAndTrySendMail(mail)) {
 				return Ok(new { Result = $"Mail {mail.Id} sended" });
 			}
+
 			await _mailQueueRepository.Add(mail);
 			return Ok(new { Result = $"Mail {mail.Id} queued" });
 		}

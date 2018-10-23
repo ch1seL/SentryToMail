@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Sentry;
@@ -10,16 +11,16 @@ using SentryToMail.Models;
 namespace SentryToMail.Domain {
 	public class MailSender : IMailSender {
 		private readonly IViewRender _viewRender;
-		private readonly ISmtpClient _smtpClient;
+		private readonly IServiceProvider _serviceProvider;
 		private readonly MailOptions _mailOptions;
 		private readonly ILogger<MailSender> _logger;
 		private readonly IHub _sentry;
 
-		public MailSender(IViewRender viewRender, ISmtpClient smtpClient, IOptions<MailOptions> mailOptionsAccessor, ILogger<MailSender> logger, IHub sentry) {
+		public MailSender(IViewRender viewRender, IServiceProvider serviceProvider, IOptions<MailOptions> mailOptionsAccessor, ILogger<MailSender> logger, IHub sentry) {
 			_viewRender = viewRender;
+			_serviceProvider = serviceProvider;
 			_logger = logger;
 			_sentry = sentry;
-			_smtpClient = smtpClient;
 			_mailOptions = mailOptionsAccessor.Value;
 		}
 
@@ -46,7 +47,9 @@ namespace SentryToMail.Domain {
 
 			_logger.LogInformation($"Trying to send mail: {mail.Id}");
 			try {
-				await _smtpClient.SendMailAsync(mailMessage);
+				using (var smtpClient = _serviceProvider.GetRequiredService<ISmtpClient>()) {
+					await smtpClient.SendMailAsync(mailMessage);
+				}
 			} catch (Exception ex) {
 				_logger.LogError(ex, $"Mail {mail.Id} send is failed!");
 				_sentry.CaptureException(ex);

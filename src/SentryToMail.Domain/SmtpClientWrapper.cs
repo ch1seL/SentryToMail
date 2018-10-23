@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SentryToMail.Configurations.Options;
 
 namespace SentryToMail.Domain {
-	public class SmtpClientWrapper : ISmtpClient, IDisposable {
-		private readonly ILogger<SmtpClientWrapper> _logger;
+	public class SmtpClientWrapper : ISmtpClient {
 		public SmtpClient SmtpClient { get; set; }
 
-		public SmtpClientWrapper(IOptions<SmtpOptions> smtpOptionsAccessor, ILogger<SmtpClientWrapper> logger) {
-			_logger = logger;
+		public SmtpClientWrapper(IOptions<SmtpOptions> smtpOptionsAccessor) {
 			SmtpOptions smtpOptions = smtpOptionsAccessor.Value;
 			SmtpClient = new SmtpClient(smtpOptions.Host, smtpOptions.Port);
 		}
@@ -19,11 +16,9 @@ namespace SentryToMail.Domain {
 		public Task SendMailAsync(MailMessage mailMessage) {
 			return SmtpClient.SendMailAsync(mailMessage);
 		}
-
-		public void Dispose() {
-			_logger.LogDebug("SmtpClientWrapper dispose");
-			SmtpClient.SendAsyncCancel();
-			SmtpClient?.Dispose();
+		
+		void IDisposable.Dispose() {
+			SmtpClient.Dispose();
 		}
 	}
 }

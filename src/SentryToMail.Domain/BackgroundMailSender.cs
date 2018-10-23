@@ -15,6 +15,7 @@ namespace SentryToMail.Domain {
 		private readonly IServiceProvider _serviceProvider;
 		private readonly ILogger<BackgroundMailSender> _logger;
 		private readonly BackgroundMailSenderOptions _options;
+		private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(10, 10);
 
 		public BackgroundMailSender(IServiceProvider serviceProvider, ILogger<BackgroundMailSender> logger, IOptions<BackgroundMailSenderOptions> optionsAccessor) {
 			_serviceProvider = serviceProvider;
@@ -36,15 +37,15 @@ namespace SentryToMail.Domain {
 						_logger.LogInformation($"Found {mailQueue.Count} mails in repository");
 						var mailSender = serviceProvider.GetRequiredService<IMailSender>();
 
-						async Task RenderAndSendImpl(MailModel mail) {
-							var isSuccess = await mailSender.RenderAndTrySendMail(mail);
+						IEnumerable<Task> tasks = mailQueue.Select(async m => {
+							await Semaphore.WaitAsync(stoppingToken);
+							bool isSuccess = await mailSender.RenderAndTrySendMail(m);
 							if (isSuccess) {
-								await mailQueueRepository.Delete(mail);
+								await mailQueueRepository.Delete(m);
 								useDelay = false;
 							}
-						}
-
-						IEnumerable<Task> tasks = mailQueue.Select(RenderAndSendImpl);
+							Semaphore.Release();
+						});
 						await Task.WhenAll(tasks);
 					}
 				}
