@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,17 +31,21 @@ namespace SentryToMail.Domain {
 				using (IServiceScope scope = _serviceProvider.CreateScope()) {
 					IServiceProvider serviceProvider = scope.ServiceProvider;
 					var mailQueueRepository = serviceProvider.GetRequiredService<IMailQueueRepository>();
-					HashSet<MailModel> mailQueue = mailQueueRepository.PeekMailQueue();
+					HashSet<MailModel> mailQueue = await mailQueueRepository.PeekMailQueue();
 					if (mailQueue.Count > 0) {
 						_logger.LogInformation($"Found {mailQueue.Count} mails in repository");
 						var mailSender = serviceProvider.GetRequiredService<IMailSender>();
-						foreach (MailModel mail in mailQueue) {
-							if (!await mailSender.RenderAndTrySendMail(mail)) {
-								continue;
+
+						async Task RenderAndSendImpl(MailModel mail) {
+							var isSuccess = await mailSender.RenderAndTrySendMail(mail);
+							if (isSuccess) {
+								await mailQueueRepository.Delete(mail);
+								useDelay = false;
 							}
-							mailQueueRepository.Delete(mail);
-							useDelay = false;
 						}
+
+						IEnumerable<Task> tasks = mailQueue.Select(RenderAndSendImpl);
+						await Task.WhenAll(tasks);
 					}
 				}
 				if (useDelay) {

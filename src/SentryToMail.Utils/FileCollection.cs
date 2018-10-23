@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace SentryToMail.Utils {
@@ -11,8 +11,7 @@ namespace SentryToMail.Utils {
 		private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
 			{ Formatting = Formatting.Indented };
 
-		public FileCollection(string filePath, T collection = null) {
-			_collection = collection ?? new T();
+		public FileCollection(string filePath) {
 			_filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filePath);
 			if (File.Exists(_filePath)) {
 				return;
@@ -24,41 +23,43 @@ namespace SentryToMail.Utils {
 			File.Create(_filePath).Close();
 		}
 
-		public TR Update<TR>(Func<T, TR> func) {
-			_collection = ReadJsonFromFile(_filePath) ?? _collection;
+		public Task<T> PeekAll() {
+			return ReadJsonFromFile(_filePath);
+		}
+
+		public async Task<TR> UpdateAsync<TR>(Func<T, TR> func) {
+			_collection = await ReadJsonFromFile(_filePath);
 
 			TR result = func(_collection);
 
-			WriteJsonToFile(_filePath, _collection);
+			await WriteJsonToFile(_filePath, _collection);
 
 			return result;
 		}
 
-		private T ReadJsonFromFile(string filePath) {
-			using (FileStream stream = File.OpenRead(filePath)) {
-				using (var reader = new StreamReader(stream)) {
-					JsonSerializer serializer = JsonSerializer.CreateDefault();
-					var jsonTextReader = new JsonTextReader(reader);
-					return serializer.Deserialize<T>(jsonTextReader);
+		private Task<T> ReadJsonFromFile(string filePath) {
+			return Task.Run(() => {
+				using (FileStream stream = File.OpenRead(filePath)) {
+					using (var reader = new StreamReader(stream)) {
+						JsonSerializer serializer = JsonSerializer.CreateDefault();
+						var jsonTextReader = new JsonTextReader(reader);
+						return serializer.Deserialize<T>(jsonTextReader) ?? new T();
+					}
 				}
-			}
+			});
 		}
 
-		private void WriteJsonToFile(string filePath, T obj) {
-			using (FileStream stream = File.OpenWrite(filePath)) {
-				using (var reader = new StreamWriter(stream)) {
-					JsonSerializer serializer = JsonSerializer.Create(_serializerSettings);
-					var jsonTextWriter = new JsonTextWriter(reader);
-					serializer.Serialize(jsonTextWriter, obj);
-					jsonTextWriter.Flush();
+		private Task WriteJsonToFile(string filePath, T obj) {
+			return Task.Run(() => {
+				using (FileStream stream = File.OpenWrite(filePath)) {
+					using (var reader = new StreamWriter(stream)) {
+						JsonSerializer serializer = JsonSerializer.Create(_serializerSettings);
+						var jsonTextWriter = new JsonTextWriter(reader);
+						serializer.Serialize(jsonTextWriter, obj);
+						jsonTextWriter.Flush();
+					}
 				}
-			}
-		}
-
-		public T PeekAll() {
-			T jsonFromFile = ReadJsonFromFile(_filePath);
-			_collection = jsonFromFile ?? _collection;
-			return _collection;
+			});
 		}
 	}
 }

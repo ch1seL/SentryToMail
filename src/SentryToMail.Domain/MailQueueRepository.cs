@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Sentry;
 using SentryToMail.Configurations.Options;
 using SentryToMail.Models;
 using SentryToMail.Utils;
@@ -8,34 +11,45 @@ using SentryToMail.Utils;
 namespace SentryToMail.Domain {
 	public class MailQueueRepository : IMailQueueRepository {
 		private readonly ILogger<MailQueueRepository> _logger;
-		private static readonly object SyncLock = new object();
+		private readonly IHub _sentry;
 		private readonly FileCollection<HashSet<MailModel>> _mailQueueRepository;
 
-		public MailQueueRepository(IOptions<RepositoriesOptions> repositoryOptionsAccessor, ILogger<MailQueueRepository> logger) {
+		public MailQueueRepository(IOptions<RepositoriesOptions> repositoryOptionsAccessor, ILogger<MailQueueRepository> logger, IHub sentry) {
 			_logger = logger;
+			_sentry = sentry;
 			_mailQueueRepository = new FileCollection<HashSet<MailModel>>($"{repositoryOptionsAccessor.Value.Path}{nameof(MailQueueRepository)}.json");
 		}
 
-		public HashSet<MailModel> PeekMailQueue() {
-			lock (SyncLock) {
-				return _mailQueueRepository.PeekAll();
-			}
+		public Task<HashSet<MailModel>> PeekMailQueue() {
+			return _mailQueueRepository.PeekAll();
 		}
 
-		public void Delete(MailModel mail) {
+		public async Task Delete(MailModel mail) {
 			_logger.LogInformation($"Delete mail {mail.Id} from repository");
-			lock (SyncLock) {
-				if (_mailQueueRepository.Update(hashSet => hashSet.RemoveWhere(model => model.Id == mail.Id)) == 1) {
-					_logger.LogInformation($"The mail {mail.Id} has been deleted from repository!");
-				} else {
-					_logger.LogError($"The mail {mail.Id} was not found in repository!");
+			try {
+				int updatedRecords = await _mailQueueRepository.UpdateAsync(hashSet => hashSet.RemoveWhere(model => model.Id == mail.Id));
+				if (updatedRecords == 1) {
+					_logger.LogInformation($"Mail {mail.Id} has been deleted from repository!");
+					return;
 				}
+				if (updatedRecords == 0) {
+					_logger.LogError($"Mail {mail.Id} was not found in repository!");
+					throw new Exception("Mail {mail.Id} was not found in repository!");
+				}
+				if (updatedRecords > 1) {
+					_logger.LogError($"Mail {mail.Id} was not found in repository!");
+					throw new Exception("Mail {mail.Id} was not found in repository!");
+				}
+			} catch (Exception ex) {
+				_logger.LogError(ex, $"Unknown error while deleting {mail.Id} from repository!");
+				_sentry.CaptureException(ex);
 			}
 		}
 
-		public void Add(MailModel mail) {
-			lock (SyncLock) {
-				_mailQueueRepository.Update(hashSet => hashSet.Add(mail));
+		public async Task Add(MailModel mail) {
+			bool success = await _mailQueueRepository.UpdateAsync(hashSet => hashSet.Add(mail));
+			if (!success) {
+				throw new Exception("Element is already present");
 			}
 		}
 	}
