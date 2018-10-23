@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using SentryToMail.Models.SentryDataModel;
 
@@ -9,7 +8,9 @@ namespace SentryToMail.Models.Extensions {
 
 		public static string ToExceptionString(this Value exceptionValue) {
 			var stringBuilder = new StringBuilder();
-			stringBuilder.AppendFormat("{0}: {1}{2}", exceptionValue.Type, exceptionValue.ValueValue, Environment.NewLine);
+			stringBuilder.Append(exceptionValue.Type)
+			             .Append(": ")
+			             .AppendLine(exceptionValue.ValueValue);
 
 			if (exceptionValue.Stacktrace.Frames.Length == 0) {
 				return stringBuilder.ToString();
@@ -22,13 +23,19 @@ namespace SentryToMail.Models.Extensions {
 			if (exceptionValue.Stacktrace.Frames.Length <= LinesToShow) {
 				return stringBuilder.ToString();
 			}
-			
-			stringBuilder.AppendFormat("...{1}({0} additional frame(s) were not displayed)", exceptionValue.Stacktrace.Frames.Length - LinesToShow, Environment.NewLine);
+
+			stringBuilder.AppendLine("...")
+			             .Append("(")
+			             .Append(exceptionValue.Stacktrace.Frames.Length - LinesToShow)
+			             .Append(" additional frame(s) were not displayed)");
+
 			return stringBuilder.ToString();
 		}
 
 		public static void AppendFrame(this StringBuilder stringBuilder, Frame frame) {
-			stringBuilder.AppendFormat("  at {0}{1}{2}", frame.ContextLine, frame.IsFile() ? $" in {frame.Filename}:line {frame.Lineno}" : string.Empty, Environment.NewLine);
+			stringBuilder.Append("  at ")
+			             .Append(frame.ContextLine)
+			             .AppendLine(frame.Filename != null ? $" in {frame.Filename}:line {frame.Lineno}" : null);
 		}
 	}
 }
