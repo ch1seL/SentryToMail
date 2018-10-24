@@ -21,41 +21,37 @@ namespace SentryToMail.Utils {
 			File.Create(_filePath).Close();
 		}
 
-		public Task<T> PeekAll() {
+		public T PeekAll() {
 			return ReadJsonFromFile(_filePath);
 		}
 
 		public async Task<TR> Update<TR>(Func<T, TR> func) {
-			T collection = await PeekAll();
+			T collection = PeekAll();
 			TR result = func(collection);
-			await WriteJsonToFile(_filePath, collection);
+			WriteJsonToFile(_filePath, collection);
 
 			return result;
 		}
 
-		private Task<T> ReadJsonFromFile(string filePath) {
-			return Task.Run(() => {
-				using (FileStream stream = File.OpenRead(filePath)) {
-					using (var reader = new StreamReader(stream)) {
-						JsonSerializer serializer = JsonSerializer.CreateDefault();
-						var jsonTextReader = new JsonTextReader(reader);
-						return serializer.Deserialize<T>(jsonTextReader) ?? new T();
-					}
+		private T ReadJsonFromFile(string filePath) {
+			using (FileStream stream = File.OpenRead(filePath)) {
+				using (var reader = new StreamReader(stream)) {
+					JsonSerializer serializer = JsonSerializer.CreateDefault();
+					var jsonTextReader = new JsonTextReader(reader);
+					return serializer.Deserialize<T>(jsonTextReader) ?? new T();
 				}
-			});
+			}
 		}
 
-		private Task WriteJsonToFile(string filePath, T obj) {
-			return Task.Run(() => {
-				using (FileStream stream = File.Create(filePath)) {
-					using (var writer = new StreamWriter(stream)) {
-						JsonSerializer serializer = JsonSerializer.Create(_serializerSettings);
-						var jsonTextWriter = new JsonTextWriter(writer);
-						serializer.Serialize(jsonTextWriter, obj);
-						jsonTextWriter.Flush();
-					}
+		private void WriteJsonToFile(string filePath, T obj) {
+			using (FileStream stream = File.OpenWrite(filePath)) {
+				using (var writer = new StreamWriter(stream)) {
+					JsonSerializer serializer = JsonSerializer.Create(_serializerSettings);
+					var jsonTextWriter = new JsonTextWriter(writer);
+					serializer.Serialize(jsonTextWriter, obj);
+					jsonTextWriter.Flush();
 				}
-			});
+			}
 		}
 	}
 }

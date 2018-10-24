@@ -32,7 +32,7 @@ namespace SentryToMail.Domain {
 				using (IServiceScope scope = _serviceProvider.CreateScope()) {
 					IServiceProvider serviceProvider = scope.ServiceProvider;
 					var mailQueueRepository = serviceProvider.GetRequiredService<IMailQueueRepository>();
-					HashSet<MailModel> mailQueue = await mailQueueRepository.PeekMailQueue();
+					HashSet<MailModel> mailQueue = mailQueueRepository.PeekMailQueue();
 					if (mailQueue.Count > 0) {
 						_logger.LogInformation($"Found {mailQueue.Count} mails in repository");
 						var mailSender = serviceProvider.GetRequiredService<IMailSender>();

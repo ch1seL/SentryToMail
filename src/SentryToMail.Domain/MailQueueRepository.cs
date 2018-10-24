@@ -22,7 +22,7 @@ namespace SentryToMail.Domain {
 			_mailQueueRepository = new FileCollection<HashSet<MailModel>>($"{repositoryOptionsAccessor.Value.Path}{nameof(MailQueueRepository)}.json");
 		}
 
-		public Task<HashSet<MailModel>> PeekMailQueue() {
+		public HashSet<MailModel> PeekMailQueue() {
 			return _mailQueueRepository.PeekAll();
 		}
 
