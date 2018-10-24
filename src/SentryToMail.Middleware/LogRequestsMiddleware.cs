@@ -13,15 +13,15 @@ namespace SentryToMail.Middleware {
 		}
 
 		public async Task InvokeAsync(HttpContext context) {
-			var logFile = $"{AppDomain.CurrentDomain.BaseDirectory}/logs/requests-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}.json";
+			var logFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs/requests", context.Request.Path.ToString().TrimStart('/'), $"{DateTime.Now:yyyy-MM-ddTHH-mm-ss}_{Guid.NewGuid()}.json");
 			var fileInfo = new FileInfo(logFile);
 			if (!fileInfo.Directory?.Exists ?? false) {
 				fileInfo.Directory.Create();
 			}
 
 			context.Request.EnableRewind();
-			var responseBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
-			await File.AppendAllTextAsync(logFile, responseBody);
+			string requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
+			await File.AppendAllTextAsync(logFile, requestBody);
 			context.Request.Body.Position = 0;
 			await _next(context);
 		}

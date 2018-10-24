@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,7 @@ namespace SentryToMail.Domain {
 		private readonly IServiceProvider _serviceProvider;
 		private readonly ILogger<BackgroundMailSender> _logger;
 		private readonly BackgroundMailSenderOptions _options;
+		private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(10, 10);
 
 		public BackgroundMailSender(IServiceProvider serviceProvider, ILogger<BackgroundMailSender> logger, IOptions<BackgroundMailSenderOptions> optionsAccessor) {
 			_serviceProvider = serviceProvider;
@@ -30,17 +32,23 @@ namespace SentryToMail.Domain {
 				using (IServiceScope scope = _serviceProvider.CreateScope()) {
 					IServiceProvider serviceProvider = scope.ServiceProvider;
 					var mailQueueRepository = serviceProvider.GetRequiredService<IMailQueueRepository>();
-					HashSet<MailModel> mailQueue = mailQueueRepository.PeekMailQueue();
-					if (mailQueue.Count > 0) {
-						_logger.LogInformation($"Found {mailQueue.Count} mails in repository");
+					MailModel[] mailQueue = await mailQueueRepository.PeekMailQueue();
+					if (mailQueue.Length > 0) {
+						_logger.LogInformation($"Found {mailQueue.Length} mails in repository");
 						var mailSender = serviceProvider.GetRequiredService<IMailSender>();
-						foreach (MailModel mail in mailQueue) {
-							if (!await mailSender.RenderAndTrySendMail(mail)) {
-								continue;
+						IEnumerable<Task> tasks = mailQueue.Select(async m => {
+							try {
+								await Semaphore.WaitAsync(stoppingToken);
+								bool isSuccess = await mailSender.RenderAndTrySendMail(m, stoppingToken);
+								if (isSuccess) {
+									mailQueueRepository.Delete(m.Id);
+									useDelay = false;
+								}
+							} finally {
+								Semaphore.Release();
 							}
-							mailQueueRepository.Delete(mail);
-							useDelay = false;
-						}
+						});
+						await Task.WhenAll(tasks);
 					}
 				}
 				if (useDelay) {

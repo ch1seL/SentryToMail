@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -22,7 +23,7 @@ namespace SentryToMail.Domain {
 			_serviceProvider = serviceProvider;
 		}
 
-		public string Render<TModel>(string name, TModel model) {
+		public async Task<string> RenderAsync<TModel>(string name, TModel model) {
 			var actionContext = new ActionContext(new DefaultHttpContext { RequestServices = _serviceProvider }, new RouteData(), new ActionDescriptor());
 		
 			ViewEngineResult viewEngineResult = _viewEngine.FindView(actionContext, name, isMainPage: false);
@@ -44,7 +45,7 @@ namespace SentryToMail.Domain {
 					output,
 					new HtmlHelperOptions());
 
-				view.RenderAsync(viewContext).GetAwaiter().GetResult();
+				await view.RenderAsync(viewContext);
 
 				return output.ToString();
 			}

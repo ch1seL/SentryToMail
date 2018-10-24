@@ -1,29 +1,46 @@
 ﻿using System;
 using System.Net.Mail;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SentryToMail.Configurations.Options;
 
 namespace SentryToMail.Domain {
 	public class SmtpClientWrapper : ISmtpClient, IDisposable {
-		private readonly ILogger<SmtpClientWrapper> _logger;
-		public SmtpClient SmtpClient { get; set; }
+		private readonly SmtpClient _smtpClient;
 
-		public SmtpClientWrapper(IOptions<SmtpOptions> smtpOptionsAccessor, ILogger<SmtpClientWrapper> logger) {
-			_logger = logger;
+		public SmtpClientWrapper(IOptions<SmtpOptions> smtpOptionsAccessor) {
 			SmtpOptions smtpOptions = smtpOptionsAccessor.Value;
-			SmtpClient = new SmtpClient(smtpOptions.Host, smtpOptions.Port);
+			_smtpClient = new SmtpClient(smtpOptions.Host, smtpOptions.Port);
 		}
 
-		public Task SendMailAsync(MailMessage mailMessage) {
-			return SmtpClient.SendMailAsync(mailMessage);
+		public Task SendMailAsync(MailMessage mailMessage, CancellationToken cancellationToken) {
+			cancellationToken.ThrowIfCancellationRequested();
+			cancellationToken.Register(() => {
+				if (Disposed) {
+					return;
+				}
+				_smtpClient?.SendAsyncCancel();
+			}, useSynchronizationContext: false);
+
+			_smtpClient.SendCompleted += (s, e) => {
+				var callbackClient = s as SmtpClient;
+				var callbackMailMessage = e.UserState as MailMessage;
+				callbackClient?.Dispose();
+				callbackMailMessage?.Dispose();
+				Disposed = true;
+			};
+
+			return _smtpClient.SendMailAsync(mailMessage);
 		}
 
-		public void Dispose() {
-			_logger.LogDebug("SmtpClientWrapper dispose");
-			SmtpClient.SendAsyncCancel();
-			SmtpClient?.Dispose();
+		private bool Disposed { get; set; }
+
+		void IDisposable.Dispose() {
+			if (!Disposed) {
+				_smtpClient.Dispose();
+			}
+			Disposed = true;
 		}
 	}
 }

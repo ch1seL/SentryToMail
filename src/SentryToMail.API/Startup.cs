@@ -42,10 +42,10 @@ namespace SentryToMail.API {
 				.AddAutoMapper(typeof(SentryToMailModelProfile));
 
 			services
-				.AddSingleton<IMailQueueRepository, MailQueueRepository>()
-				.AddTransient<ISmtpClient, SmtpClientWrapper>()
-				.AddTransient<IViewRender, ViewRender>()
-				.AddTransient<IMailSender, MailSender>();
+				.AddScoped<IMailQueueRepository, MailQueueRepository>()
+				.AddScoped<IViewRender, ViewRender>()
+				.AddScoped<IMailSender, MailSender>()
+				.AddTransient<ISmtpClient, SmtpClientWrapper>();
 
 			services
 				.AddHostedService<BackgroundMailSender>();

@@ -1,5 +1,7 @@
-﻿namespace SentryToMail.Domain {
+﻿using System.Threading.Tasks;
+
+namespace SentryToMail.Domain {
 	public interface IViewRender {
-		string Render<TModel>(string name, TModel model);
+		Task<string> RenderAsync<TModel>(string name, TModel model);
 	}
 }

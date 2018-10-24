@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SentryToMail.Configurations.Options;
@@ -8,35 +10,27 @@ using SentryToMail.Utils;
 namespace SentryToMail.Domain {
 	public class MailQueueRepository : IMailQueueRepository {
 		private readonly ILogger<MailQueueRepository> _logger;
-		private static readonly object SyncLock = new object();
-		private readonly FileCollection<HashSet<MailModel>> _mailQueueRepository;
+		private readonly FileCollection<MailModel> _mailQueueRepository;
 
 		public MailQueueRepository(IOptions<RepositoriesOptions> repositoryOptionsAccessor, ILogger<MailQueueRepository> logger) {
 			_logger = logger;
-			_mailQueueRepository = new FileCollection<HashSet<MailModel>>($"{repositoryOptionsAccessor.Value.Path}{nameof(MailQueueRepository)}.json");
+			_mailQueueRepository = new FileCollection<MailModel>(Path.Combine(repositoryOptionsAccessor.Value.Path, nameof(MailQueueRepository)));
 		}
 
-		public HashSet<MailModel> PeekMailQueue() {
-			lock (SyncLock) {
-				return _mailQueueRepository.PeekAll();
-			}
+		public Task<MailModel[]> PeekMailQueue() {
+			return _mailQueueRepository.PeekAll();
 		}
 
-		public void Delete(MailModel mail) {
+		public void Delete(Guid mailId) {
+			_logger.LogInformation($"Delete mail {mailId} from repository");
+			_mailQueueRepository.Delete(mailId);
+			_logger.LogInformation($"Mail {mailId} has been deleted from repository!");
+		}
+
+		public async Task Add(MailModel mail) {
 			_logger.LogInformation($"Delete mail {mail.Id} from repository");
-			lock (SyncLock) {
-				if (_mailQueueRepository.Update(hashSet => hashSet.RemoveWhere(model => model.Id == mail.Id)) == 1) {
-					_logger.LogInformation($"The mail {mail.Id} has been deleted from repository!");
-				} else {
-					_logger.LogError($"The mail {mail.Id} was not found in repository!");
-				}
-			}
-		}
-
-		public void Add(MailModel mail) {
-			lock (SyncLock) {
-				_mailQueueRepository.Update(hashSet => hashSet.Add(mail));
-			}
+			await _mailQueueRepository.Add(mail.Id, mail);
+			_logger.LogInformation($"Mail {mail.Id} has been added to repository!");
 		}
 	}
 }

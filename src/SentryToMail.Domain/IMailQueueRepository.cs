@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Threading.Tasks;
 using SentryToMail.Models;
 
 namespace SentryToMail.Domain {
 	public interface IMailQueueRepository {
-		void Add(MailModel mail);
-		HashSet<MailModel> PeekMailQueue();
-		void Delete(MailModel mail);
+		Task Add(MailModel mail);
+		Task<MailModel[]> PeekMailQueue();
+		void Delete(Guid mailId);
 	}
 }
