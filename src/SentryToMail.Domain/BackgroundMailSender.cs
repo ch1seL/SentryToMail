@@ -37,13 +37,16 @@ namespace SentryToMail.Domain {
 						_logger.LogInformation($"Found {mailQueue.Length} mails in repository");
 						var mailSender = serviceProvider.GetRequiredService<IMailSender>();
 						IEnumerable<Task> tasks = mailQueue.Select(async m => {
-							await Semaphore.WaitAsync(stoppingToken);
-							bool isSuccess = await mailSender.RenderAndTrySendMail(m, stoppingToken);
-							if (isSuccess) {
-								mailQueueRepository.Delete(m.Id);
-								useDelay = false;
+							try {
+								await Semaphore.WaitAsync(stoppingToken);
+								bool isSuccess = await mailSender.RenderAndTrySendMail(m, stoppingToken);
+								if (isSuccess) {
+									mailQueueRepository.Delete(m.Id);
+									useDelay = false;
+								}
+							} finally {
+								Semaphore.Release();
 							}
-							Semaphore.Release();
 						});
 						await Task.WhenAll(tasks);
 					}
