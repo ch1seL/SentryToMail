@@ -40,7 +40,7 @@ namespace SentryToMail.Domain {
 					throw new Exception($"Mail {mail.Id} was not found in repository!");
 				}
 				if (updatedRecords > 1) {
-					throw new Exception($"More than one mail id:{mail.Id} founded in repository!");
+					throw new Exception($"More than one mail id:{mail.Id} deleted from repository!");
 				}
 			} catch (Exception ex) {
 				_logger.LogError(ex, $"Unknown error while deleting {mail.Id} from repository!");
