@@ -48,9 +48,8 @@ namespace SentryToMail.Domain {
 
 			_logger.LogInformation($"Trying to send mail: {mail.Id}");
 			try {
-				using (var smtpClient = _serviceProvider.GetRequiredService<ISmtpClient>()) {
-					await smtpClient.SendMailAsync(mailMessage, cancellationToken);
-				}
+				var smtpClient = _serviceProvider.GetRequiredService<ISmtpClient>();
+				await smtpClient.SendMailAsync(mailMessage, cancellationToken);
 			} catch (Exception ex) {
 				_logger.LogError(ex, $"Mail {mail.Id} send is failed!");
 				_sentry.CaptureException(ex);
