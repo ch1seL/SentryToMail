@@ -33,8 +33,8 @@ namespace SentryToMail.Domain {
 
 			_logger.LogInformation($"Trying to render mail: {mail.Id}");
 			try {
-				subject = _viewRender.Render(_mailOptions.MailSubjectTemplatePath, mail);
-				body = _viewRender.Render(_mailOptions.MailBodyTemplatePath, mail);
+				subject = await _viewRender.RenderAsync(_mailOptions.MailSubjectTemplatePath, mail);
+				body = await _viewRender.RenderAsync(_mailOptions.MailBodyTemplatePath, mail);
 			} catch (Exception ex) {
 				_logger.LogError(ex, $"Mail {mail.Id} render is failed!");
 				_sentry.CaptureException(ex);
