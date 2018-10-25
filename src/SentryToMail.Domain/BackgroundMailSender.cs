@@ -32,16 +32,17 @@ namespace SentryToMail.Domain {
 				using (IServiceScope scope = _serviceProvider.CreateScope()) {
 					IServiceProvider serviceProvider = scope.ServiceProvider;
 					var mailQueueRepository = serviceProvider.GetRequiredService<IMailQueueRepository>();
-					MailModel[] mailQueue = await mailQueueRepository.PeekMailQueue();
+					Guid[] mailQueue = mailQueueRepository.GetMailQueueIds();
 					if (mailQueue.Length > 0) {
 						_logger.LogInformation($"Found {mailQueue.Length} mails in repository");
 						var mailSender = serviceProvider.GetRequiredService<IMailSender>();
 						IEnumerable<Task> tasks = mailQueue.Select(async m => {
 							try {
 								await Semaphore.WaitAsync(stoppingToken);
-								bool isSuccess = await mailSender.RenderAndTrySendMail(m, stoppingToken);
+								MailModel mail = await mailQueueRepository.GetMailById(m);
+								bool isSuccess = await mailSender.TryRenderAndSendMail(mail, stoppingToken);
 								if (isSuccess) {
-									mailQueueRepository.Delete(m.Id);
+									mailQueueRepository.Delete(m);
 									useDelay = false;
 								}
 							} finally {

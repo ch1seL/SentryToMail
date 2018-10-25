@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,17 +16,8 @@ namespace SentryToMail.Utils {
 			}
 		}
 
-		public Task<T[]> PeekAll() {
-			IEnumerable<Task<T>> tasks = _dir.GetFiles("*.json").Select(async file => {
-				using (var stream = new StreamReader(File.OpenRead(file.FullName))) {
-					using (var reader = new JsonTextReader(stream)) {
-						JObject jObject = await JObject.LoadAsync(reader);
-						return jObject.ToObject<T>();
-					}
-				}
-			});
-
-			return Task.WhenAll(tasks);
+		public Guid[] PeekAllIds() {
+			return _dir.GetFiles("*.json").Select(d => Guid.Parse(Path.GetFileNameWithoutExtension(d.Name))).ToArray();
 		}
 
 		public void Delete(Guid mailId) {
@@ -41,6 +31,16 @@ namespace SentryToMail.Utils {
 				using (var writer = new StreamWriter(stream)) {
 					JsonWriter jsonTextWriter = new JsonTextWriter(writer);
 					await JObject.FromObject(mail).WriteToAsync(jsonTextWriter);
+				}
+			}
+		}
+
+		public async Task<T> Peek(Guid guid) {
+			string filePath = Path.Combine(_dir.FullName, guid + ".json");
+			using (var stream = new StreamReader(File.OpenRead(filePath))) {
+				using (var reader = new JsonTextReader(stream)) {
+					JObject jObject = await JObject.LoadAsync(reader);
+					return jObject.ToObject<T>();
 				}
 			}
 		}

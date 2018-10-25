@@ -5,7 +5,8 @@ using SentryToMail.Models;
 namespace SentryToMail.Domain {
 	public interface IMailQueueRepository {
 		Task Add(MailModel mail);
-		Task<MailModel[]> PeekMailQueue();
+		Guid[] GetMailQueueIds();
 		void Delete(Guid mailId);
+		Task<MailModel> GetMailById(Guid guid);
 	}
 }

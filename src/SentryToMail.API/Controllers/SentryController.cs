@@ -32,7 +32,7 @@ namespace SentryToMail.API.Controllers {
 				return BadRequest(new { Error = error });
 			}
 
-			if (await _mailSender.RenderAndTrySendMail(mail)) {
+			if (await _mailSender.TryRenderAndSendMail(mail)) {
 				return Ok(new { Result = $"Mail {mail.Id} sended" });
 			}
 
