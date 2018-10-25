@@ -1,4 +1,7 @@
 # Senty Webhooks to mail retranslator
+Resolving the issue of splitting errors of different environments in accordance with Email Addresses.
+
+It receive Sentry's Webhook and send it to email string.Format(MailOptions:MailToTemplate, Environment)
 
 ## Build docker image
 docker build . -t sentrytomail
