@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -20,7 +21,13 @@ namespace SentryToMail.Middleware {
 				context.Response.StatusCode = 403;
 				context.Response.ContentType = "application/json";
 				await context.Response.WriteAsync(JsonConvert.SerializeObject(new { Error = "Token is invalid" }));
-				throw new UnauthorizedAccessException("Invalid token");
+
+				string userIp = context.Connection.RemoteIpAddress.ToString();
+				string userAgent = context.Request.Headers["User-Agent"].SingleOrDefault();
+				var ex = new UnauthorizedAccessException($"RemoteIpAddress:{userIp} User-Agent:{userAgent}");
+				ex.Data.Add("RemoteIpAddress", userIp);
+				ex.Data.Add("User-Agent", userAgent);
+				throw ex;
 			}
 
 			await _next.Invoke(context);
