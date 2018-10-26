@@ -13,6 +13,7 @@ docker run --name sentrytomail --rm -d -p 8000:80 -e ASPNETCORE_ENVIRONMENT=Stag
 :Token=sometoken -e SmtpOptions:Host=smtp.server.com -e MailOptions:MailFromTemplate=errors-{0}@you-mail.com -e MailOptions:MailToTemplate=errors-{0}@you-mail.com sentrytomail 
 
 ## Run in docker-compose
+```
 version: '3.3'
 services:
   sentrytomail:
@@ -31,3 +32,4 @@ services:
       - "8000:80"
     volumes:
       - ./Repositories:/app/Repositories
+```
