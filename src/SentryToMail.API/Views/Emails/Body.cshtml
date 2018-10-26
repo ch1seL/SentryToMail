@@ -58,7 +58,7 @@
 						@if (Model.Exception != null) {
 							<div class="interface" style="font-weight: 300; margin-bottom: 30px;">
 								<h3 class="title" style="font-size: 18px; font-weight: bold; margin: 0 0 15px;">Exception</h3>
-								<pre style="border-radius: 4px; font-size: 14px; color: #3d4649; word-wrap: break-word; padding: 15px; white-space: pre-wrap; font-family: Menlo, Monaco, 'Courier New', monospace; overflow-wrap: break-word; font-weight: normal; margin: 0 0 15px; background-color: #f4f5f6;">@Html.Raw(Model.Exception)</pre>
+								<pre style="border-radius: 4px; font-size: 14px; color: #3d4649; word-wrap: break-word; padding: 15px; white-space: pre-wrap; font-family: Menlo, Monaco, 'Courier New', monospace; overflow-wrap: break-word; font-weight: normal; margin: 0 0 15px; background-color: #f4f5f6;">@Model.Exception</pre>
 							</div>
 						}
 						@if (Model.Request != null) {

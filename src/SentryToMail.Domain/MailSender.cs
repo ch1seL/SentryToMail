@@ -25,7 +25,7 @@ namespace SentryToMail.Domain {
 			_mailOptions = mailOptionsAccessor.Value;
 		}
 
-		public async Task<bool> RenderAndTrySendMail(MailModel mail, CancellationToken cancellationToken = default) {
+		public async Task<bool> TryRenderAndSendMail(MailModel mail, CancellationToken cancellationToken = default) {
 			string from = string.Format(_mailOptions.MailFromTemplate, mail.Environment);
 			string to = string.Format(_mailOptions.MailToTemplate, mail.Environment);
 			string subject;

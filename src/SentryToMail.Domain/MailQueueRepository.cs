@@ -17,14 +17,18 @@ namespace SentryToMail.Domain {
 			_mailQueueRepository = new FileCollection<MailModel>(Path.Combine(repositoryOptionsAccessor.Value.Path, nameof(MailQueueRepository)));
 		}
 
-		public Task<MailModel[]> PeekMailQueue() {
-			return _mailQueueRepository.PeekAll();
+		public Guid[] GetMailQueueIds() {
+			return _mailQueueRepository.PeekAllIds();
 		}
 
 		public void Delete(Guid mailId) {
 			_logger.LogInformation($"Delete mail {mailId} from repository");
 			_mailQueueRepository.Delete(mailId);
 			_logger.LogInformation($"Mail {mailId} has been deleted from repository!");
+		}
+
+		public Task<MailModel> GetMailById(Guid guid) {
+			return _mailQueueRepository.Peek(guid);
 		}
 
 		public async Task Add(MailModel mail) {
